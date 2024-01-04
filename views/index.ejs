@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <script
+      src="https://kit.fontawesome.com/24ae891478.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Abro Taxi</title>
+  </head>
+
+  <body id="home">
+    <header class="hero">
+      <div id="navbar" class="navbar top">
+        <h1 class="logo">
+          <i class="fa-solid fa-taxi icon-taxi"></i> Abro
+          <span class="text-primary"> Taxi</span>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="/">HOME</a></li>
+            <li><a href="#about">ABOUT</a></li>
+            <!-- <li><a href="contact.html">CONTACT</a></li> -->
+            <li><a href="/login">LOGIN</a></li>
+            <!-- <li><a class="more" href="#">MORE</a></li> -->
+          </ul>
+        </nav>
+      </div>
+
+      <div class="content">
+        <h1>Abro <span class="text-primary">Taxi Service</span></h1>
+        <p>
+          We are delivering Reliability, Affordability, Comfort, and Safety Taxi
+          services. አስተማማኝ አገልግሎቶቻችንን በተመጣጣኝ ዋጋ በመጠቀም የኑሮ ምቾትዎን ይጨምሩ
+        </p>
+        <a href="#about" class="btn"
+          ><i class="fas fa-chevron-right"></i> Read More</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <!-- About: Icons -->
+      <section id="about" class="icons bg-light">
+        <div class="flex-items">
+          <div>
+            <i class="fa-solid fa-handshake fa-2x"></i>
+            <div>
+              <h3><span class="text-primary">Reliable</span></h3>
+              <p>Guaranteed daily service</p>
+            </div>
+          </div>
+          <div>
+            <i class="fa fa-money fa-2x"></i>
+            <div>
+              <h3><span class="text-primary">Affordable</span></h3>
+              <p>We offer fair price Fixed price per Taxi-Stop locations</p>
+            </div>
+          </div>
+          <div>
+            <i class="fa fa-couch fa-2x"></i>
+            <div>
+              <h3><span class="text-primary">Comfortable</span></h3>
+              <p>Door to door pick up & drop Schedule once, use everyday</p>
+            </div>
+          </div>
+          <div>
+            <i class="fa-solid fa-user-shield fa-2x"></i>
+            <div>
+              <h3><span class="text-primary">Safe</span></h3>
+              <p>Ride with your own group Arrive on time to office and Home</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About:Solutions -->
+      <section class="solutions flex-columns">
+        <div class="row">
+          <div class="column">
+            <div class="column-1">
+              <img src="./images/taxi_background.avif" alt="" />
+            </div>
+          </div>
+          <div class="column">
+            <div class="column-2 bg-primary">
+              <h4>What you are looking for</h4>
+              <h2>We provide bespoke services</h2>
+              <p>
+                We are delivering reliable, affordable, comfortable, and safe
+                Taxi Services
+                <br />
+                <br />
+                Abro Taxi offers office to Home and/or Home to office taxi
+                service to make the life of our customers easy. We do this with
+                a combination of a sleek office commute app and a robust cab
+                service. Use our door-to-door services.
+              </p>
+              <!-- <a href="/views/reed_more.html" class="btn btn-outline">
+                <i class="fas fa-chevron"></i>
+                Read More
+              </a> -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer bg-dark">
+      <div class="social">
+        <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+        <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+        <a href="#"><i class="fab fa-youtube fa-2x"></i></a>
+        <a href="#"><i class="fab fa-linkedin fa-2x"></i></a>
+      </div>
+      <p>Copyright &copy; 2020 - Abro Taxi</p>
+    </footer>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.0.min.js"
+      integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const navbar = document.getElementById('navbar');
+      let scrolled = false;
+
+      window.onscroll = function () {
+        if (window.pageYOffset > 100) {
+          navbar.classList.remove('top');
+          if (!scrolled) {
+            navbar.style.transform = 'translateY(-70px)';
+          }
+          setTimeout(function () {
+            navbar.style.transform = 'translateY(0)';
+            scrolled = true;
+          }, 200);
+        } else {
+          navbar.classList.add('top');
+          scrolled = false;
+        }
+      };
+
+      // Smooth Scrolling
+      $('#navbar a, .btn').on('click', function (e) {
+        if (this.hash !== '') {
+          e.preventDefault();
+
+          const hash = this.hash;
+
+          $('html, body').animate(
+            {
+              scrollTop: $(hash).offset().top - 100,
+            },
+            800
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
