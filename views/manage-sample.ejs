@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <script
+      src="https://kit.fontawesome.com/24ae891478.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>Abro-Taxi</title>
+  </head>
+
+  <body id="home">
+    <header class="hero contact">
+      <div id="navbar" class="navbar top-contact">
+        <h1 class="logo">
+          <i class="fa-solid fa-taxi icon-taxi"></i> Abro
+          <span class="text-primary"> Taxi</span>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="/">HOME</a></li>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+            <li><a href="/login">LOGIN</a></li>
+            <li><a class="more" href="mange.html">MORE</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Page -->
+    <div class="grid">
+      <!-- Side Bar -->
+      <div class="sidebar bg-dark">
+        <ul>
+          <li>
+            <h3>Manege Drivers</h3>
+          </li>
+          <li>
+            <a class="sidebar-btn" href="#"
+              ><label for="Driver name">Driver name</label></a
+            >
+          </li>
+          <li>
+            <a class="sidebar-btn" href="#">
+              <label for="Driver seats">Driver seats</label>
+            </a>
+          </li>
+          <li><a class="sidebar-btn set" href="#">Set</a></li>
+          <li><a class="sidebar-btn driver_info" href="#">Driver Info</a></li>
+          <li>
+            <a class="sidebar-btn assign_driver" href="#">Assign Driver</a>
+          </li>
+          <li>
+            <a class="sidebar-btn Assigned-tasks" href="#">Assigned Tasks</a>
+          </li>
+          <li>
+            <h3 class="bg-dark">Manage Clients</h3>
+          </li>
+          <li>
+            <a class="sidebar-btn" href="#"
+              ><label for="">Start point</label></a
+            >
+          </li>
+          <li>
+            <a class="sidebar-btn" href="#"> <label for="">End point</label></a>
+          </li>
+          <li>
+            <a class="sidebar-btn" href="#">
+              <label for=""> Service Group</label></a
+            >
+          </li>
+          <li><a class="sidebar-btn" href="#">Load Maching Group</a></li>
+          <li>
+            <h3>Left Seats</h3>
+          </li>
+          <li><a class="sidebar-btn" href="#">Find Assigned Clients</a></li>
+          <li><a class="sidebar-btn" href="#">Find Unassigned Clients</a></li>
+          <li>
+            <a class="sidebar-btn" href="#">Client name</a>
+          </li>
+          <li><a class="sidebar-btn" href="#">Client info</a></li>
+          <li><a class="sidebar-btn" href="#">Allow reorder</a></li>
+          <li><a class="sidebar-btn" href="#">All Assigned Clients</a></li>
+          <li><a class="sidebar-btn" href="#">All unassigned Clients </a></li>
+          <li><a class="sidebar-btn" href="#">Add to Group</a></li>
+          <li><a class="sidebar-btn" href="#">Move to Group</a></li>
+          <li><a class="sidebar-btn" href="#">Get report</a></li>
+          <li><a class="sidebar-btn" href="#">Set</a></li>
+        </ul>
+      </div>
+
+      <!-- Work Area -->
+      <div class="list-content">
+        <!-- Search Area -->
+        <div id="search-container" class="search-container hidden">
+          <form action="">
+            <input type="text" placeholder="search driver info" />
+            <button type="submit"><i class="fas fa-search"></i></button>
+          </form>
+        </div>
+
+        <!-- Setting Area -->
+        <div id="setting-container" class="Manage-container hidden"></div>
+
+        <!-- List Area -->
+
+        <div class="list-container"></div>
+      </div>
+    </div>
+
+    <script>
+      const account1 = {
+        owner: 'Sarah Yen',
+        movements: [200, 450, -400, 3000, -650, -130, 70],
+        interestRate: 1.2, // %
+        pin: 1111,
+      };
+
+      const searchContainer = document.getElementById('search-container');
+      const settingContainer = document.getElementById('setting-container');
+      const table = document.createElement('table');
+      const tbody = document.createElement('tbody');
+      const thead = document.createElement('thead');
+      const listContainer = document.querySelector('.list-container');
+
+      thead.a;
+
+      /*
+      
+       <table id="list-container" class="table responsive hidden">
+            <thead class="bg-dark">
+              <tr>
+                <td></td>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+      
+       */
+
+      listContainer.innerHTML = '';
+
+      const tableListsHead = `<table class="table responsive">  <thead class="bg-dark">
+            <tr>
+              <td> Task id</td>
+                        <td>Email</td>
+              <td>Name</td>
+              <td>Phone</td>
+              <td>Start Point  </td>
+              <td>End Point</td>
+              <td>Monthly Payment </td>
+              <td>Task Type </td>
+              <td>Available seats </td>
+              <td> Left seats</td>
+        <td>Service group</td>
+        <td> Plate number </td>
+        <td> Assigned by </td>
+         <td>  </td>
+            </tr>
+          </thead>
+           </table>`;
+
+      table.insertAdjacentHTML('beforebegin', tableListsHead);
+
+      const tableListBody = `
+         <table class="table responsive">
+              <tbody>
+                <tr>
+                  <td data-label="Task id">
+                    <div class="phone-primary">${34}</div>
+                  </td>
+                  <td data-label="Email">${'numerihussen1000@gmail.com'}</td>
+                  <td data-label="Name">	jaffar hussen</td>
+                  <td data-label="Start Point"> 	ካራ ቆሬ</td>
+                  <td data-label="End Point">	ሜክሲኮ</td>
+                  <td data-label="Monthly Payment">12000</td>
+                  <td data-label="Task Type">standard</td>
+                  <td data-label="Available seats ">12</td>
+                  <td data-label="Left seats">	9	</td>
+                   <td data-label="Service group">	jaffar_hussen-ካራ ቆሬ->ሜክሲኮ	</td>
+                    <td data-label="Plate number">		123343123B	</td>
+                     <td data-label="Assigned by ">		yimam.mohammed11@gmail.com	</td>
+                  <td>
+                    <div class="btn">Remove</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        `;
+
+      table.insertAdjacentHTML('beforebegin', tableListBody);
+
+      document
+        .querySelector('.Assigned-tasks')
+        .addEventListener('click', function () {
+          table.classList.remove('hidden');
+          const head = `  <table class="table responsive">  <thead class="bg-dark">
+            <tr>
+         		 	 		 			 	 	 			 		
+                      <td> Task id</td>
+                        <td>Email</td>
+              <td>Name</td>
+              <td>Phone</td>
+              <td>Start Point  </td>
+              <td>End Point</td>
+              <td>Monthly Payment </td>
+              <td>Task Type </td>
+              <td>Available seats </td>
+              <td> Left seats</td>
+        <td>Service group</td>
+        <td> Plate number </td>
+        <td> Assigned by </td>
+         <td>  </td>
+            </tr>
+          </thead>
+           </table>`;
+          console.log('click');
+          table.insertAdjacentHTML('beforebegin', head);
+          const displayMovements = function (movements) {
+            // thead.innerHTML = "";
+
+            movements.forEach(function (mov, i) {
+              const html = `
+         
+     <table class="table responsive">
+          <tbody>
+            <tr>
+              <td data-label="Task id">
+                <div class="phone-primary">${34}</div>
+              </td>
+              <td data-label="Email">${'numerihussen1000@gmail.com'}</td>
+              <td data-label="Name">	jaffar hussen</td>
+              <td data-label="Start Point"> 	ካራ ቆሬ</td>
+              <td data-label="End Point">	ሜክሲኮ</td>
+              <td data-label="Monthly Payment">12000</td>
+              <td data-label="Task Type">standard</td>
+              <td data-label="Available seats ">12</td>
+              <td data-label="Left seats">	9	</td>
+               <td data-label="Service group">	jaffar_hussen-ካራ ቆሬ->ሜክሲኮ	</td>
+                <td data-label="Plate number">		123343123B	</td>
+                 <td data-label="Assigned by ">		yimam.mohammed11@gmail.com	</td>
+              <td>
+                <div class="btn">Remove</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+
+    `;
+              console.log('clicked');
+
+              tbody.insertAdjacentHTML('beforebegin', html);
+            });
+          };
+          displayMovements(account1.movements);
+        });
+
+      ////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////
+      document
+        .querySelector('.driver_info')
+        .addEventListener('click', function () {
+          table.classList.remove('hidden');
+          search_container.classList.remove('hidden');
+          const head = `  <table class="table responsive">  <thead class="bg-dark">
+            <tr>
+         		 	  	 		
+                <td>Email</td>
+              <td>Name</td>
+              <td>Phone</td>
+              <td>Type of car</td>
+              <td>Model of car</td>
+              <td>Available vehicle seat</td>
+              <td>Plate number</td>
+              <td>Reg Date</td>
+              <td></td>
+            </tr>
+          </thead>
+           </table>`;
+          console.log('click');
+          table.insertAdjacentHTML('beforebegin', head);
+          const displayMovements = function (movements) {
+            thead.innerHTML = '';
+
+            movements.forEach(function (mov, i) {
+              const html = `
+         
+     <table class="table responsive">
+         
+							
+          <tbody>
+            <tr>
+              <td data-label="Phone">
+                <div class="phone-primary">numerihussen1000@gmail.com</div>
+              </td>
+              <td data-label="Nae">jaffar hussen</td>
+              <td data-label="Service Gruop">0944317104</td>
+              <td data-label="Start Point">Minibus</td>
+              <td data-label="End Point">2016</td>
+              <td data-label="Order Date">12</td>
+              <td data-label="Reg Date">123343123B</td>
+              <td data-label="States">2022,1,3</td>
+              <td data-label="Payment States">disabled</td>
+              <td>
+                <div class="btn">Join Service</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+
+    `;
+              console.log('clicked');
+
+              tbody.insertAdjacentHTML('beforebegin', html);
+            });
+          };
+          displayMovements(account1.movements);
+        });
+
+      //////////////////
+      //////////////////////
+      ////////////////////
+      document
+        .querySelector('.assign_driver')
+        .addEventListener('click', function () {
+          Manage_container.classList.remove('hidden');
+          //  table.classList.remove("hidden");
+          const head = `  <table class="table responsive">  <thead class="bg-dark">
+            <tr>
+         		 	 		 			 	 	 			 		
+                      <td> Task id</td>
+                        <td>Email</td>
+              <td>Name</td>
+              <td>Phone</td>
+             
+              <td>Start Point  </td>
+              <td>End Point</td>
+              <td>Monthly Payment </td>
+              <td>Task Type </td>
+              <td>Available seats </td>
+              <td> Left seats</td>
+        <td>Service group</td>
+        <td> Plate number </td>
+        <td> Assigned by </td>
+         <td>  </td>
+            </tr>
+          </thead>
+           </table>`;
+          console.log('click');
+          table.insertAdjacentHTML('beforebegin', head);
+          const displayMovements = function (movements) {
+            // thead.innerHTML = "";
+
+            movements.forEach(function (mov, i) {
+              const html = `
+         
+     <table class="table responsive">
+         
+	
+          <tbody>
+            <tr>
+              <td data-label="Phone">
+                <div class="phone-primary">${34}</div>
+              </td>
+              <td data-label="Nae">${'numerihussen1000@gmail.com'}</td>
+              <td data-label="Service Gruop">	jaffar hussen</td>
+              <td data-label="Start Point"> 	ካራ ቆሬ</td>
+              <td data-label="End Point">	ሜክሲኮ</td>
+              <td data-label="Order Date">12000</td>
+              <td data-label="Reg Date">standard</td>
+              <td data-label="States">12</td>
+              <td data-label="Payment States">	9	</td>
+               <td data-label="Payment States">	jaffar_hussen-ካራ ቆሬ->ሜክሲኮ	</td>
+                <td data-label="Payment States">		123343123B	</td>
+                 <td data-label="Payment States">		yimam.mohammed11@gmail.com	</td>
+              <td>
+                <div class="btn">Remove</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    `;
+              console.log('clicked');
+
+              tbody.insertAdjacentHTML('beforebegin', html);
+            });
+          };
+          displayMovements(account1.movements);
+        });
+      document
+        .querySelector('.View-task')
+        .addEventListener('click', function () {
+          table.classList.remove('hidden');
+        });
+    </script>
+  </body>
+</html>
