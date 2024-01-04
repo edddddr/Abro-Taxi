@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <script
+      src="https://kit.fontawesome.com/24ae891478.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <title>Abro Taxi</title>
+  </head>
+
+  <body id="home">
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <header class="hero contact">
+      <div id="navbar" class="navbar top-contact">
+        <h1 class="logo">
+          <i class="fa-solid fa-taxi icon-taxi"></i> Abro
+          <span class="text-primary"> Taxi</span>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="/">HOME</a></li>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+            <li><a href="/login">LOGIN</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section-registration">
+        <form
+          id="form-staff-register"
+          method="post"
+          action="/staffRegister"
+          class="form-container"
+        >
+          <h1><span class="text-primary"> Staff </span> Registration</h1>
+
+          <div class="input-container">
+            <div id="input-box" class="input-box">
+              <input id="first-name" placeholder="" type="text" required />
+              <label>First Name</label>
+            </div>
+            <div id="input-box" class="input-box">
+              <input id="middle-name" placeholder="" type="text" required />
+              <label>Middle Name</label>
+            </div>
+            <div id="input-box" class="input-box">
+              <input id="last-name" placeholder="" type="text" required />
+              <label>Last Name</label>
+            </div>
+            <div id="input-box" class="input-box">
+              <input id="staff-phone" placeholder="" type="tel" required />
+              <label>Phone</label>
+            </div>
+            <div id="input-box" class="input-box">
+              <input
+                id="new-password"
+                placeholder=""
+                type="password"
+                required
+              />
+
+              <label>Password</label>
+            </div>
+            <div id="input-box" class="input-box">
+              <input
+                id="confirm-password"
+                placeholder=""
+                type="text"
+                required
+              />
+              <label>Confirm Password</label>
+            </div>
+            <div id="input-box" class="input-box">
+              <input id="staff-email" placeholder="" type="email" required />
+              <label>Email</label>
+            </div>
+
+            <div id="select-box" class="select-box">
+              <select id="select-gender" class="auto-label" required="">
+                <option></option>
+                <option>Male</option>
+                <option>Female</option>
+              </select>
+              <label>Gender</label>
+            </div>
+
+            <div id="input-box" class="input-box">
+              <button class="btn">Submit</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      let msg = {};
+      const modal = document.getElementById('my-modal');
+      const successMessage = document.getElementById('success-message');
+
+      const input = document.querySelector('#staff-phone');
+      const formContainer = document.querySelector('.form-container');
+      const staffForm = document.querySelector('#form-staff-register');
+      const staffEmail = document.querySelector('#staff-email');
+      // Listen to change
+      formContainer.addEventListener('change', function (e) {
+        element = e.target;
+        if (element.classList.contains('auto-label')) {
+          if (element.value.trim() !== '') element.classList.add('changed');
+          else element.classList.remove('changed');
+        }
+      });
+
+      function displayToast(msg = 'message', states) {
+        console.log(msg);
+        Toastify({
+          text: msg,
+          duration: 3000,
+          newWindow: true,
+          close: true,
+          gravity: 'top', // `top` or `bottom`
+          position: 'right', // `left`, `center` or `right`
+          stopOnFocus: false, // Prevents dismissing of toast on hover
+          style: {
+            background: 'linear-gradient(to right, #28a745, #28a745)',
+          },
+          onClick: function () {}, // Callback after click
+        }).showToast();
+      }
+
+      function showPass(element, type) {
+        if (element.type === 'password' && type === 'focus') {
+          element.type = 'text';
+        } else {
+          element.type = 'password';
+        }
+      }
+
+      staffForm.addEventListener('focusin', function (e) {
+        const element = e.target;
+        if (
+          element.getAttribute('id') === 'new-password' ||
+          element.getAttribute('id') === 'confirm-password'
+        ) {
+          showPass(element, 'focus');
+        }
+      });
+
+      staffForm.addEventListener('focusout', function (e) {
+        const element = e.target;
+        if (
+          element.getAttribute('id') === 'new-password' ||
+          element.getAttribute('id') === 'confirm-password'
+        ) {
+          showPass(element, 'blur');
+        }
+
+        if (staffEmail.value.trim()) {
+          const emailRegex = /\S+@\S+\.\S+/;
+          if (!emailRegex.test(staffEmail.value.trim())) {
+            staffEmail.value = '';
+          }
+        }
+      });
+
+      function phoneNumber(inputTxt) {
+        const phoneNo = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+        if (inputTxt.charAt(0) == '0' && inputTxt.charAt(1) == '9') {
+          if (inputTxt.match(phoneNo)) {
+            return true;
+          } else return false;
+        } else {
+          return false;
+        }
+      }
+
+      function validate(evt) {
+        const theEvent = evt || window.event;
+        let key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        const regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+          theEvent.returnValue = false;
+          if (theEvent.preventDefault) {
+            theEvent.preventDefault();
+          }
+        }
+      }
+
+      $(document).ready(function () {
+        function setCharAt(str, index, chr) {
+          if (index > str.length - 1) return str;
+          return str.substring(0, index) + chr + str.substring(index + 1);
+        }
+
+        function checkPass(pass, confirmPass) {
+          if (pass && pass.length < 8) {
+            return 'password to short';
+          } else if (pass !== confirmPass) return 'password not matching';
+          else return 'success';
+        }
+
+        $('#form-staff-register').submit(function (e) {
+          e.preventDefault(); // avoid to execute the actual submit of the form.
+
+          const num = $('#staff-phone').val().trim();
+          const fullNum = setCharAt(num, 0, '+251');
+
+          if (phoneNumber(num)) {
+            const data = {};
+
+            data.firstName = $('[id=first-name]').val();
+            data.middleName = $('[id=middle-name]').val();
+            data.lastName = $('[id=last-name]').val();
+            data.gender = $('[id=select-gender]').val();
+            data.phone = fullNum;
+            data.password = $('[id=new-password]').val();
+            data.confirmPassword = $('[id=confirm-password]').val();
+            data.email = $('[id=staff-email]').val();
+
+            console.log(data);
+
+            if (checkPass(data.password, data.confirmPassword) !== 'success') {
+              displayToast(checkPass(data.password, data.confirmPassword));
+              return;
+            }
+
+            const form = $(this);
+            const url = form.attr('action');
+
+            $.ajax({
+              type: 'POST',
+              url: url,
+              data: data,
+              success: function (data) {
+                console.log('data', data);
+                apiResponse(data);
+              },
+            });
+          } else {
+            msg = {
+              states: 'invalid-value',
+              msg: 'please enter valid 10 digit phone number like 09xxxxxxxx',
+              data: '',
+            };
+            apiResponse(msg);
+          }
+        });
+      });
+
+      function apiResponse(res) {
+        console.log('res', res);
+        if (res?.states) displayToast(res.msg);
+      }
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      };
+    </script>
+  </body>
+</html>
