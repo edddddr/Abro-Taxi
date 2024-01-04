@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <script
+      src="https://kit.fontawesome.com/24ae891478.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <title>Abro Taxi</title>
+  </head>
+
+  <body id="home">
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+
+    <header class="hero contact">
+      <div id="navbar" class="navbar top-contact">
+        <h1 class="logo">
+          <i class="fa-solid fa-taxi icon-taxi"></i> Abro
+          <span class="text-primary"> Taxi</span>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="/">HOME</a></li>
+            <!-- <li><a href="index.html#about">ABOUT</a></li> -->
+            <!-- <li><a href="contact.html">CONTACT</a></li> -->
+            <!-- <li><a href="/login">LOGIN</a></li> -->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- form -->
+      <section>
+        <div class="container">
+          <form id="login-form" method="post" class="callback-form">
+            <div class="form-control">
+              <label for="phonenumber">Phone</label>
+              <input
+                type="tel"
+                id="phonenumber"
+                name="phone"
+                placeholder="Phone"
+              />
+            </div>
+
+            <div class="form-control">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+              />
+            </div>
+            <div class="form-control">
+              <button type="submit">Sign in</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script>
+      $(document).ready(function () {
+        $('#login-form').submit(function (e) {
+          e.preventDefault(); // avoid to execute the actual submit of the form.
+
+          const form = $(this);
+          const url = window.location.origin + '/login'; //localhost:3000/login
+
+          console.log(url);
+
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (res) {
+              apiResponse(res);
+            },
+          });
+        });
+      });
+
+      function apiResponse(res) {
+        if (res.states)
+          Toastify({
+            text: res.msg,
+            duration: 3000,
+            // destination: "https://github.com/apvarun/toastify-js",
+            newWindow: true,
+            close: true,
+            gravity: 'top', // `top` or `bottom`
+            position: 'right', // `left`, `center` or `right`
+            stopOnFocus: false, // Prevents dismissing of toast on hover
+            style: {
+              background: 'linear-gradient(to right, #28a745, #28a745)',
+            },
+            onClick: function () {}, // Callback after click
+          }).showToast();
+
+        if (res.states === 'success') {
+          const url = window.location.origin;
+          window.open(url + res.data.location, '_self'); //localhost:3000/management
+        }
+      }
+    </script>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+    integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+  
+  <script>
+    const navbar = document.getElementById("navbar");
+    let scrolled = false;
+
+    window.onscroll = function () {
+      if (window.pageYOffset > 100) {
+        navbar.classList.remove("top");
+        if (!scrolled) {
+          navbar.style.transform = "translateY(-70px)";
+        }
+        setTimeout(function () {
+          navbar.style.transform = "translateY(0)";
+          scrolled = true;
+        }, 200);
+      } else {
+        navbar.classList.add("top");
+        scrolled = false;
+      }
+    };
+
+    // Smooth Scrolling
+    $("#navbar a, .btn").on("click", function (e) {
+      if (this.hash !== "") {
+        e.preventDefault();
+
+        const hash = this.hash;
+
+        $("html, body").animate(
+          {
+            scrollTop: $(hash).offset().top - 100,
+          },
+          800
+        );
+      }
+    });
+  </script> -->
+  </body>
+</html>
