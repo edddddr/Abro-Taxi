@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tesla Taxi</title>
+    <link rel="stylesheet" href="public\assets\style.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+
+  <body>
+    <div class="registration-form">
+      <div class="header">
+        <div class="loader"></div>
+        <h1 class="header_staff_reg">Tesla Taxi Task Setting</h1>
+      </div>
+
+      <form id="task_setting_form" method="post" action="staff_task_setting">
+        <table id="task_setting_table" class="table">
+          <thead>
+            <tr>
+              <th colspan="5">Task Setting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="custom-select">
+                  <label for="email">Driver</label>
+                  <br />
+                  <select name="email" id="email" required>
+                    <option></option>
+                    <% staff.forEach(function(staff){ %>
+                    <option value="<%=staff.email%>">
+                      <%=staff.first_name+" "+staff.last_name%>
+                    </option>
+                    <% }); %>
+                  </select>
+                </div>
+              </td>
+
+              <td>
+                <div class="custom-select">
+                  <label for="start_point">Start Point</label>
+                  <br />
+
+                  <select name="start_point" id="start_point" required>
+                    <option></option>
+                    <% places.forEach(function(places){ %>
+                    <option value="<%=places.place_name%>">
+                      <%=places.place_name%>
+                    </option>
+                    <% }); %>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <div class="custom-select">
+                  <label for="end_point">End Point</label>
+                  <br />
+
+                  <select name="end_point" id="end_point" required>
+                    <option></option>
+                    <% places.forEach(function(places){ %>
+                    <option value="<%=places.place_name%>">
+                      <%=places.place_name%>
+                    </option>
+                    <% }); %>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <div class="custom-select2">
+                  <br />
+                  <input
+                    id="monthly_payment"
+                    name="monthly_payment"
+                    min="500"
+                    size="10"
+                    type="number"
+                    placeholder="Monthly payment in birr"
+                    value=""
+                    onkeypress="validate(event)"
+                    required
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="custom-select">
+                  <label for="task_type">Task type</label>
+                  <br />
+                  <select name="task_type" id="task_type" required>
+                    <option value="standard">Standard</option>
+                    <option value="part_time">Part time</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="custom-select2">
+                  <input
+                    type="text"
+                    id="service_group_name"
+                    name="service_group_name"
+                    size="40"
+                    placeholder="Service group name"
+                    value=""
+                    required
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="table_title">
+                  <span class="title">Available vehicle seats:</span>
+                  <span class="title" id="available_seats"></span>
+                </div>
+              </td>
+              <td>
+                <div class="table_title">
+                  <span class="title">Plate number:</span>
+                  <span class="title" id="plate_number"></span>
+                </div>
+              </td>
+              <td>
+                <button type="button" id="show_task" class="btnManagement">
+                  View tasks
+                </button>
+              </td>
+              <td>
+                <button type="button" id="assign_task" class="btnManagement">
+                  Save
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+
+      <div class="staff_info_class">
+        <table id="staff_task_assigned" class="info_table">
+          <thead>
+            <tr>
+              <th colspan="13">Driver Tasks</th>
+            </tr>
+            <tr>
+              <th>Task id</th>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Start Point</th>
+              <th>End Point</th>
+              <th>Monthly Payment</th>
+              <th>Task Type</th>
+              <th>Available seats</th>
+              <th>Left seats</th>
+              <th>Service group</th>
+              <th>Plate number</th>
+              <th>Assigned by</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- <span class="close">&times;</span> -->
+            <h2>Hamza School Management</h2>
+          </div>
+          <div class="modal-body">
+            <div class="printStudentId">
+              <br />
+              <span id="successMessage" class="label success"></span>
+              <br />
+              <br />
+              <br />
+            </div>
+          </div>
+          <!-- <div class="modal-footer">
+                <h3>Modal Footer</h3>
+              </div> -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function validate(evt) {
+        const theEvent = evt || window.event;
+        const key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        const regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+          theEvent.returnValue = false;
+          if (theEvent.preventDefault) {
+            theEvent.preventDefault();
+          }
+        }
+      }
+
+      const modal = document.getElementById("myModal");
+
+      // Get the <span> element that closes the modal
+      const span = document.getElementsByClassName("close")[0];
+      const successMessage = document.getElementById("successMessage");
+
+      const s_subjects = [];
+
+      $(document).ready(function () {
+        $("#email").on("change", function () {
+          if ($("#email").val()) {
+            const data = {};
+            data.email = $("#email ").val();
+
+            const url = window.location.origin;
+
+            $.ajax({
+              type: "POST",
+              url: url + "/load_available_seats",
+              data: data,
+              success: function (data) {
+                available_seats(data);
+              },
+            });
+          } else alert("Driver not selected");
+        });
+
+        $("#end_point").on("change", function () {
+          $("#service_group_name").val(
+            $("#email option:selected").text().trim().replace(/\s+/g, "_") +
+              "-" +
+              $("#start_point").val() +
+              "->" +
+              $("#end_point").val().trim().replace(/\s+/g, "_")
+          );
+        });
+
+        $("#assign_task").on("click", function () {
+          const data = {};
+          if ($("#email").val()) {
+            if ($("#start_point").val()) {
+              if ($("#end_point").val()) {
+                if ($("#start_point ").val() == $("#end_point ").val()) {
+                  alert("Start point and end point cannot be the same");
+                  return;
+                }
+                if ($("#monthly_payment").val()) {
+                  if ($("#task_type").val()) {
+                    if ($("#manager_email").text()) {
+                      if ($("#service_group_name").val().trim()) {
+                        if ($("#available_seats").text()) {
+                          if ($("#plate_number").text()) {
+                            data.email = $("#email").val();
+                            data.start_point = $("#start_point ").val();
+                            data.end_point = $("#end_point ").val();
+                            data.monthly_payment = $("#monthly_payment").val();
+                            data.task_type = $("#task_type").val();
+                            data.assigned_by = $("#manager_email").text();
+                            data.name = $("#email option:selected").text();
+                            data.service_group = $("#service_group_name")
+                              .val()
+                              .trim();
+                            data.available_vahicle_seat =
+                              $("#available_seats").text();
+                            data.plate_number = $("#plate_number").text();
+                            const url = window.location.origin;
+
+                            $.ajax({
+                              type: "POST",
+                              url: url + "/assign_tasks",
+                              data: data,
+                              success: function (data) {
+                                assignedTasks(data);
+                              },
+                            });
+                          } else
+                            alert(
+                              "please make sure you are connected to the internet and select driver again"
+                            );
+                        } else
+                          alert(
+                            "please make sure you are connected to the internet and select driver again"
+                          );
+                      } else alert("service name cannot be empty");
+                    } else alert("Please reload the page");
+                  } else alert("Task type not selected");
+                } else alert("Payment cannot be empty");
+              } else alert("End point not selected");
+            } else alert("Start point not selected");
+          } else alert("Driver not selected");
+        });
+
+        $("#show_task").on("click", function () {
+          const data = {};
+          const url = window.location.origin;
+
+          $.ajax({
+            type: "POST",
+            url: url + "/assigned_tasks",
+            data: data,
+            success: function (data) {
+              assignedTasks(data);
+            },
+          });
+        });
+      });
+
+      function assignedTasks(data) {
+        const infoTableBody = document.querySelector(
+          "#staff_task_assigned > tbody"
+        );
+        const info_tables = document.getElementById("staff_task_assigned");
+        info_tables.style.display = "block";
+
+        if (data.states == "success") {
+          while (infoTableBody.firstChild) {
+            infoTableBody.removeChild(infoTableBody.firstChild);
+          }
+          data.data.forEach((row) => {
+            const tr = document.createElement("tr");
+
+            row.forEach((cell) => {
+              const td = document.createElement("td");
+              td.textContent = cell;
+              tr.appendChild(td);
+            });
+
+            const trButton = document.createElement("button");
+            trButton.id = "btnRemoveTask";
+            trButton.type = "button";
+            trButton.className = "staff_info_close";
+            trButton.textContent = "Remove";
+            trButton.onclick = function () {
+              const r = confirm("Are you sure?");
+              if (r == true) {
+                const url = window.location.origin;
+                const data = {};
+                data.id = row[0];
+
+                $.ajax({
+                  type: "POST",
+                  url: url + "/remove_task",
+                  data: data,
+                  success: function (data) {
+                    assignedTasks(data);
+                  },
+                });
+              }
+            };
+
+            tr.appendChild(trButton);
+            infoTableBody.appendChild(tr);
+          });
+          const tr = document.createElement("tr");
+          const td = document.createElement("td");
+
+          const tdButton = document.createElement("button");
+          tdButton.id = "btnCloseStaffInfoTb";
+          tdButton.type = "button";
+          tdButton.className = "staff_info_close";
+          tdButton.textContent = "Close";
+          tdButton.onclick = function () {
+            while (infoTableBody.firstChild) {
+              infoTableBody.removeChild(infoTableBody.firstChild);
+            }
+            info_tables.style.display = "none";
+          };
+
+          td.appendChild(tdButton);
+          tr.appendChild(td);
+          infoTableBody.appendChild(tr);
+        } else if ((data.states = "warning")) {
+          while (infoTableBody.firstChild) {
+            infoTableBody.removeChild(infoTableBody.firstChild);
+          }
+          info_tables.style.display = "none";
+          $("#successMessage").attr("class", "label danger");
+          $("#successMessage").text(data.msg);
+          modal.style.display = "block";
+        }
+      }
+
+      function subjects(data) {
+        if (data.states == "success") {
+          const select = document.getElementById("subject");
+          select.length = 0;
+
+          s_subjects = data.data;
+          console.log(s_subjects[0].subject_types);
+
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.innerHTML = "";
+          select.appendChild(opt);
+
+          data.data.forEach(function (data) {
+            const opt = document.createElement("option");
+            opt.value = data.subjects;
+            opt.innerHTML = data.subjects + "(" + data.subject_types + ")";
+            select.appendChild(opt);
+          });
+        } else if (data.states == "error") {
+          $("#successMessage").attr("class", "label danger");
+          $("#successMessage").text(data.msg);
+          modal.style.display = "block";
+        } else if (data.states == "expired") {
+          $("#successMessage").attr("class", "label danger");
+          $("#successMessage").text(data.msg);
+          modal.style.display = "block";
+          idPrint.style.display = "none";
+          formPrint.style.display = "none";
+          reloadPage.style.display = "block";
+        }
+      }
+
+      function available_seats(data) {
+        if (data.states == "success") {
+          $("#available_seats").text(data.data[0].available_vahicle_seat);
+
+          $("#plate_number").text(data.data[0].plate_number);
+        } else if (data.states == "error") {
+          alert(data.msg);
+        }
+      }
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+    <br />
+    <div class="table_title">
+      <span class="title">Email</span>
+      <br />
+      <span class="title" id="manager_email">
+        <%=(typeof email!='undefined' )? email:''%>
+      </span>
+    </div>
+  </body>
+</html>
