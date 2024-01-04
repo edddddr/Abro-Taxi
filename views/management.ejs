@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <script
+      defer
+      src="https://kit.fontawesome.com/24ae891478.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script
+      defer
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>Abro-Taxi</title>
+  </head>
+
+  <body id="home">
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <header class="hero contact">
+      <div id="navbar" class="navbar top-contact">
+        <h1 class="logo">
+          <i class="fa-solid fa-taxi icon-taxi"></i> Abro
+          <span class="text-primary"> Taxi</span>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="/">HOME</a></li>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li><a href="/login">LOGIN</a></li>
+            <li>
+              <a id="btn-menu" class="btn-menu"
+                ><i class="fa-solid fa-bars"></i
+              ></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Page -->
+    <div class="grid">
+      <div id="search-overlay" class="hidden"></div>
+      <!-- Side Bar -->
+      <div class="sidebar bg-dark hidden-sidebar-mobile">
+        <ul>
+          <li>
+            <h3 class="drivers-heading heading-items">Driver</h3>
+            <ul class="item-group">
+              <li>
+                <a
+                  href="/driverRegister"
+                  id="add-driver"
+                  class="sidebar-btn btn-add-driver"
+                  >Add Diver</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h3 class="drivers-heading heading-items">Service</h3>
+            <ul class="item-group">
+              <li>
+                <a href="#" id="add-service" class="sidebar-btn btn-add-service"
+                  >Add Service</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  id="manage-service"
+                  class="sidebar-btn btn-manage-service"
+                  >Manage Service</a
+                >
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <h3 class="staff-heading heading-items">Staff</h3>
+            <ul class="item-group">
+              <li>
+                <a href="/staffRegister" class="sidebar-btn btn-add-staff"
+                  >Add Staff</a
+                >
+              </li>
+              <!-- <li>
+                <a href="#" class="sidebar-btn btn-manage-staff"
+                  >Manage Staff</a
+                >
+              </li> -->
+            </ul>
+          </li>
+          <li>
+            <h3 class="users-heading heading-items">User</h3>
+            <ul class="item-group">
+              <!-- <li>
+                <a href="#" class="sidebar-btn btn-add-user">Add User</a>
+              </li> -->
+              <li>
+                <a href="#" id="manage-user" class="sidebar-btn btn-manage-user"
+                  >Manage User</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/payment"
+                  id="manage-user-payment"
+                  class="sidebar-btn btn-manage-user-payment"
+                  >Payment</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h3 class="dashboard-heading heading-items">Dashboard</h3>
+            <ul class="item-group">
+              <li>
+                <a
+                  href="#"
+                  id="manage-dashboard"
+                  class="sidebar-btn btn-dashboard"
+                  >Dashboard</a
+                >
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Work Area -->
+      <div class="list-content">
+        <!-- Dashboard Area -->
+        <div class="dashboard-container">
+          <h3>Dashboard</h3>
+          <div class="dashboard-item-container"></div>
+        </div>
+        <!-- Search Area -->
+        <div id="search-container" class="search-container"></div>
+
+        <!-- Setting Area -->
+        <div id="setting-container" class="manage-container hidden"></div>
+
+        <div id="list-container" class="list-container hidden"></div>
+      </div>
+    </div>
+    <dialog id="modal-window"></dialog>
+    <script>
+      // Load google chart api
+      google.charts.load('current', { packages: ['corechart'] });
+
+      // Selecting Elements
+      // Containers
+      const mainContainer = document.querySelector('.grid');
+      const searchContainer = document.getElementById('search-container');
+      const settingContainer = document.getElementById('setting-container');
+      const listContainer = document.getElementById('list-container');
+      let tempSearchList = '';
+      const sidebarContainer = document.querySelector('.sidebar');
+      const navbarContainer = document.querySelector('#navbar');
+      const dashboardContainer = document.querySelector(
+        '.dashboard-item-container'
+      );
+      const dashboardMainContainer = document.querySelector(
+        '.dashboard-container'
+      );
+      // Buttons
+      const btnServiceList = document.getElementById('assign_driver');
+      const btnSearch = document.getElementById('btn-search');
+      const searchOverlay = document.getElementById('search-overlay');
+      const body = document.querySelector('body');
+      const modalWindow = document.getElementById('modal-window');
+
+      // Buttons
+      let btnDriverList = '';
+
+      // Inputs
+      let driverSearchInEl = '';
+      let userSearchInEl = '';
+      let serviceSearchInEl = '';
+      let stipendEl = '';
+      let serviceGroupNameEl = '';
+      // Selects
+      let departureEl = '';
+      let DropOffEl = '';
+      let categoryEl = '';
+      // Spans
+      let driverInfoSpan = '';
+      let userInfoSpan = '';
+      let serviceInfoSpan = '';
+
+      // Variables
+      let driverSettingDataFromServer;
+      let currentUserSettingDataFromServer;
+      let placeLists;
+      let currentUserServiceGroupList;
+      let currentServiceGroupFromServer;
+      let selectedServiceGroup;
+
+      // Chained Functions map
+      /*
+       */
+
+      // Functions
+
+      function displayDashboard(data) {
+        console.log('dash', data);
+        dashboardContainer.innerHTML = '';
+
+        if (data && data.length) {
+          data.forEach(function (chart) {
+            const dashboardHtml = `<div id="${chart.chart}-chart" class='dashboard-item' style="max-width: 250px;"></div>`;
+
+            dashboardContainer.insertAdjacentHTML('afterbegin', dashboardHtml);
+            // Set Options
+            const options = {
+              title: chart.title,
+              // is3D: true,
+              pieHole: chart.options === 'pie' ? 0 : 0.4,
+            };
+            // Draw
+            const chartView = new google.visualization.PieChart(
+              document.getElementById(`${chart.chart}-chart`)
+            );
+            chartView.draw(
+              google.visualization.arrayToDataTable(chart.driver),
+              options
+            );
+          });
+        }
+      }
+
+      const dashboardData = [
+        {
+          chart: 'drivers',
+          title: 'Drivers',
+          options: 'pie',
+          driver: [
+            ['SEX', 'Mhl'],
+            ['Male', 70],
+            ['Female', 30],
+          ],
+        },
+        {
+          chart: 'users',
+          title: 'Users',
+          options: 'pie',
+          driver: [
+            ['SEX', 'Mhl'],
+            ['Male', 50],
+            ['Female', 50],
+          ],
+        },
+        {
+          chart: 'services',
+          title: 'Service Groups',
+          options: 'donut',
+          driver: [
+            ['SEX', 'Mhl'],
+            ['Available', 90],
+            ['Unavailable', 10],
+          ],
+        },
+        {
+          chart: 'services',
+          title: 'Users',
+          options: 'donut',
+          driver: [
+            ['SEX', 'Mhl'],
+            ['Assigned', 90],
+            ['Unassigned', 10],
+          ],
+        },
+      ];
+
+      function showDash() {
+        displayDashboard(dashboardData);
+      }
+
+      google.charts.setOnLoadCallback(showDash);
+
+      // displayDashboard(dashboardData);
+
+      function listServices(phone) {
+        const url = window.location.origin + '/getService';
+        const data = { phone };
+        if (phone)
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function (res) {
+              console.log(res);
+              if (res.states === 'success') {
+              }
+              displayServiceList(res.data);
+              // displayToast(res.msg, res.states);
+            },
+          });
+      }
+
+      function removeServiceGroup(data, address) {
+        const url = window.location.origin + address;
+
+        if (data)
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function (res) {
+              displayToast(res.msg, res.states);
+              if (res.states === 'success') {
+              }
+              displayServiceList(res.data);
+            },
+          });
+      }
+
+      function updateUserUi(data) {
+        if (data?.phone) displayUserSetting(data.phone);
+      }
+
+      function addUserToService(data, address) {
+        const url = window.location.origin + address;
+
+        if (data)
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function (res) {
+              displayToast(res.msg, res.states);
+              if (res.states === 'success') {
+                updateUserUi(res);
+                return;
+              }
+            },
+          });
+      }
+      function moveUserToService(data, address) {
+        const url = window.location.origin + address;
+
+        if (data)
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function (res) {
+              displayToast(res.msg, res.states);
+              if (res.states === 'success') {
+                updateUserUi(res);
+                return;
+              }
+            },
+          });
+      }
+
+      function saveDriverSettingOnServer(data, address) {
+        console.log(data);
+
+        const url = window.location.origin + address;
+
+        if (data)
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function (res) {
+              console.log(res);
+              if (res.states === 'success') {
+                // console.log(res.data);
+              }
+              displayServiceList(res.data);
+
+              displayToast(res.msg, res.states);
+            },
+          });
+      }
+
+      function displayToast(msg = 'message', states) {
+        let background = 'linear-gradient(to right, #28a745, #28a745)';
+        if (states === 'error')
+          background = 'linear-gradient(to right, #ff5f6d, #ff5f6d)';
+        if (states === 'warning')
+          background = 'linear-gradient(to right, #F7E283, #F7E283)';
+
+        Toastify({
+          text: msg,
+          duration: 3000,
+          newWindow: true,
+          close: true,
+          gravity: 'top', // `top` or `bottom`
+          position: 'right', // `left`, `center` or `right`
+          stopOnFocus: false, // Prevents dismissing of toast on hover
+          style: {
+            background,
+          },
+          onClick: function () {}, // Callback after click
+        }).showToast();
+      }
+
+      function checkForSimilarPlaceInputs(elements, value) {
+        if ([...elements].length)
+          return [...elements].some(function (el) {
+            return el.value === value;
+          });
+
+        return false;
+      }
+
+      function hideTmpSearch(className) {
+        const element = settingContainer.querySelectorAll(`.${className}`);
+        element.forEach(function (el) {
+          el.innerHTML = '';
+          el.classList.add('hidden');
+        });
+      }
+
+      function findFromList(lists, searchValue) {
+        if (!searchValue) return [];
+
+        const searchResults =
+          lists &&
+          lists.filter(function (list) {
+            return (
+              (searchValue &&
+                list.slice(0, searchValue.length) === searchValue) ||
+              list.slice(0, searchValue.length) ===
+                searchValue[0].toUpperCase() + searchValue.slice(1)
+            );
+          });
+        return searchResults?.slice(0, 5);
+      }
+
+      function findFromServiceList(lists, searchValue) {
+        if (searchValue) {
+          const searchResults =
+            lists &&
+            lists.filter(function (list) {
+              console.log(list);
+              return (
+                (searchValue &&
+                  list.slice(0, searchValue.length) === searchValue) ||
+                list.slice(0, searchValue.length) ===
+                  searchValue[0].toUpperCase() + searchValue.slice(1) ||
+                list.includes(searchValue) ||
+                list.includes(searchValue.toUpperCase())
+              );
+            });
+          return searchResults.slice(0, 5);
+        }
+        return [];
+      }
+
+      // Search handlers
+      const driverSearchHandler = function () {
+        driverSearchInEl = document.getElementById('input-driver-search');
+        tempSearchList = document.getElementById('driver-temp-search-list');
+        driverSearchInEl.addEventListener('keyup', function () {
+          const url = window.location.origin;
+
+          searchOverlay.classList.add('search-overlay');
+
+          tempSearchList.classList.remove('hidden');
+          searchOverlay.classList.remove('hidden');
+
+          if (driverSearchInEl.value) {
+            $.ajax({
+              type: 'GET',
+              url: url + '/driverSearch?phone=' + driverSearchInEl.value,
+              success: function (data) {
+                displayingDriverSearchTmpList(data, 'search_result');
+              },
+            });
+          } else {
+            hideTmpSearchAndOverlay();
+          }
+        });
+      };
+
+      const userSearchHandler = function (type) {
+        userSearchInEl = document.getElementById('input-user-search');
+        tempSearchList = document.getElementById('user-temp-search-list');
+        userSearchInEl.addEventListener('keyup', function () {
+          const url = window.location.origin;
+
+          searchOverlay.classList.add('search-overlay');
+
+          tempSearchList.classList.remove('hidden');
+          searchOverlay.classList.remove('hidden');
+          if (userSearchInEl.value) {
+            $.ajax({
+              type: 'GET',
+              url: url + '/userSearch?searchValue=' + userSearchInEl.value,
+              success: function (data) {
+                displayingUserSearchTmpList(data, 'search_result', type);
+              },
+            });
+          } else {
+            hideTmpSearchAndOverlay();
+          }
+        });
+      };
+
+      const serviceSearchHandler = function () {
+        serviceSearchInEl = document.getElementById('input-service-search');
+        tempSearchList = document.getElementById('service-temp-search-list');
+        serviceSearchInEl.addEventListener('keyup', function () {
+          const url = window.location.origin;
+
+          searchOverlay.classList.add('search-overlay');
+
+          tempSearchList.classList.remove('hidden');
+          searchOverlay.classList.remove('hidden');
+
+          if (serviceSearchInEl.value) {
+            $.ajax({
+              type: 'GET',
+              url:
+                url +
+                '/manageServiceGroupSearch?searchValue=' +
+                serviceSearchInEl.value,
+              success: function (data) {
+                displayingServiceSearchTmpList(data, 'search_result');
+              },
+            });
+          } else {
+            hideTmpSearchAndOverlay();
+          }
+        });
+      };
+
+      // Render search box
+      const renderDriverSearchBox = function () {
+        const divCon = document.createElement('div');
+
+        searchContainer.innerHTML = '';
+
+        searchContainer.appendChild(divCon);
+
+        const searchHtml = `
+              <form id="driver-search-form" action="">
+                  <input
+                    id="input-driver-search"
+                    type="text"
+                    placeholder="search driver"
+                  />
+                </form>
+                <div id="driver-temp-search-list" class="main-temp-search-list driver-temp-search-list hidden"></div>
+              `;
+
+        divCon.insertAdjacentHTML('beforebegin', searchHtml);
+        driverSearchHandler();
+      };
+
+      const renderUserSearchBox = function (type) {
+        const divCon = document.createElement('div');
+
+        searchContainer.innerHTML = '';
+
+        searchContainer.appendChild(divCon);
+
+        const searchHtml = `
+        <form id="user-search-form" action="">
+                  <input
+                    id="input-user-search"
+                    type="text"
+                    placeholder="search user"
+                  />
+                </form>
+                <div id="user-temp-search-list" class="main-temp-search-list user-temp-search-list hidden"></div>
+              `;
+
+        divCon.insertAdjacentHTML('beforebegin', searchHtml);
+        userSearchHandler(type);
+      };
+
+      const renderServiceSearchBox = function () {
+        const divCon = document.createElement('div');
+
+        searchContainer.innerHTML = '';
+
+        searchContainer.appendChild(divCon);
+
+        const searchHtml = `
+        <form id="searvice-search-form" action="">
+                  <input
+                    id="input-service-search"
+                    type="text"
+                    placeholder="search service"
+                  />
+                </form>
+                <div id="service-temp-search-list" class="main-temp-search-list service-temp-search-list hidden"></div>
+              `;
+
+        divCon.insertAdjacentHTML('beforebegin', searchHtml);
+        serviceSearchHandler();
+      };
+
+      const renderDashboard = function () {
+        dashboardMainContainer.classList.remove('hidden');
+        showDash();
+      };
+
+      // Hide elements
+      const hideDashboard = function () {
+        dashboardMainContainer.classList.add('hidden');
+      };
+
+      const hideSidebar = function () {
+        sidebarContainer.classList.add('hidden-sidebar');
+        sidebarContainer.classList.add('hidden-sidebar-mobile');
+      };
+
+      const hideSidebarItems = function () {
+        sidebarContainer.querySelectorAll('.item-group')?.forEach(function (e) {
+          e.classList.add('hidden-menu');
+          e
+            .closest('li')
+            .querySelector('.heading-items').style.backgroundColor =
+            'transparent';
+        });
+      };
+
+      const hideTmpSearchAndOverlay = function () {
+        if (tempSearchList) tempSearchList.innerHTML = '';
+        tempSearchList?.classList?.add('hidden');
+        searchOverlay?.classList?.add('hidden');
+      };
+
+      const hideModalAndOverlay = function () {
+        tempSearchList.innerHTML = '';
+        tempSearchList.classList?.add('hidden');
+        searchOverlay.classList?.add('hidden');
+      };
+
+      const hideLists = function () {
+        listContainer.innerHTML = '';
+        listContainer.classList.add('hidden');
+      };
+
+      // Display Settings
+      const displayDriverSetting = function (phone) {
+        const divCon = document.createElement('div');
+
+        settingContainer.innerHTML = '';
+
+        settingContainer.appendChild(divCon);
+
+        const settingHtml = `
+                <h3>Add Service</h3>
+                <div class="items">
+                  <div class="item1">
+
+                <div class="label-info"><span id='span-driver-info'>${''}</span> </div>
+              </div>
+              <div class="item">
+                <input
+                      id="select-departure"
+                      class="select-departure list-item driver-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="select-departure-search-list"
+                    class="temp-search-list place-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Departure</label> </div>
+              </div>
+              <div class="item">
+                <input
+                      id="select-drop-off"
+                      class="select-drop-off list-item driver-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="select-drop-off-search-list"
+                    class="temp-search-list place-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Drop-off</label> </div>
+
+              </div>
+
+              <div class="item">
+
+                <input class='driver-setting-input' id='stipend' type="number" placeholder='In Birr' />
+                <div class="label-item"><label class="form__label">Stipend</label> </div>
+              </div>
+
+              <div class="item">
+                <input class='driver-setting-input' id='distance' type="number" placeholder='In Km' />
+                <div class="label-item"><label class="form__label">Distance</label> </div>
+              </div>
+
+              <div class="item">
+
+                <input class='driver-setting-input' id='service-group-name' type="text" />
+                <div class="label-item">  <label class="form__label">Service Groups</label> </div>
+              </div>
+
+              <div class="item">
+
+                <select class='driver-setting-input' id='select-task-category' type="text">
+                  <option value="regular">Regular</option>
+                  <option value="part_time">Part time</option>
+                </select>
+                <div class="label-item">  <label class="form__label">Task Category</label>  </div>
+              </div>
+
+              <button id='btn-add-service-group' class="btn-add-service-group">Apply</button>
+              <div></div>
+              <button id='btn-view' class="btn-view">View</button>
+            </div>
+            `;
+
+        divCon.insertAdjacentHTML('beforebegin', settingHtml);
+        const url = window.origin;
+
+        $.ajax({
+          type: 'GET',
+          url: url + '/getAddServiceSetting?phone=' + phone,
+          data: '',
+          success: function (data) {
+            // console.log(data);
+
+            // Select Elements for driver setting
+            // Inputs
+            stipendEl = document.getElementById('stipend');
+            serviceGroupNameEl = document.getElementById('service-group-name');
+            // Selects
+            departureEl = document.getElementById('select-departure');
+            DropOffEl = document.getElementById('select-drop-off');
+            categoryEl = document.getElementById('select-task-type');
+            // Buttons
+            // Spans
+            driverInfoSpan = document.getElementById('span-driver-info');
+
+            if (data?.states === 'success') {
+              driverSettingDataFromServer = data.data;
+              placeLists = data.placeLists.flat(1).map(function (place) {
+                return place.placeName.trim();
+              });
+              // console.log(data.placeLists);
+              driverInfoSpan.textContent = data.driverInfo;
+              settingContainer.classList.remove('hidden');
+
+              window.scrollTo({
+                top:
+                  Number.parseFloat(settingContainer.offsetTop) -
+                  Number.parseFloat(
+                    window.getComputedStyle(navbarContainer).height
+                  ) -
+                  10,
+                behavior: 'smooth',
+              });
+            }
+          },
+        });
+      };
+
+      const displayUserSetting = function (phone) {
+        selectedServiceGroup = undefined;
+        const divCon = document.createElement('div');
+
+        settingContainer.innerHTML = '';
+
+        settingContainer.appendChild(divCon);
+
+        const settingHtml = `
+                <h3>Manage user</h3>
+                <div class="items user-items">
+                  <div class="item1">
+                    <div class="label-info">
+                      <span id='span-user-info'>${''}</span>
+                    </div>
+                 </div>
+              <div class="item">
+                <input
+                      id="select-matching-group"
+                      class="select-matching-group list-item user-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="select-matching-group-search-list"
+                    class="temp-search-list service-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Matching service groups</label> </div>
+              </div>
+              <div class="item">
+                <input
+                      id="select-group"
+                      class="select-group list-item user-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="select-group-search-list"
+                    class="temp-search-list service-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Service groups</label> </div>
+              </div>
+
+              <div class='service-states'></div>
+
+              <button id='btn-add-passenger-to-group' class="btn-add-passenger-to-group">Add to group</button>
+              <button id='btn-move-passenger-to-group' class="btn-move-passenger-to-group">Move to group</button>
+              <button id='btn-notify-user' class="btn-notify-user">Notify</button>
+            </div>
+            `;
+
+        divCon.insertAdjacentHTML('beforebegin', settingHtml);
+        const url = window.origin;
+
+        $.ajax({
+          type: 'POST',
+          url: url + '/getUserSettingDetail',
+          data: {
+            phone,
+            places: placeLists && placeLists.length > 0 ? '0' : '1',
+          },
+          success: function (data) {
+            console.log(data);
+            userInfoSpan = document.getElementById('span-user-info');
+
+            console.log(data);
+            if (data?.states === 'success') {
+              currentUserSettingDataFromServer = data.data;
+              if (data.placeLists && data.placeLists.length)
+                placeLists = data.placeLists.flat(1).map(function (place) {
+                  return place.placeName.trim();
+                });
+
+              if (data.serviceLists && data.serviceLists.length)
+                currentUserServiceGroupList = data.serviceLists
+                  .flat(1)
+                  .map(function (service) {
+                    return service.serviceGroup.trim();
+                  });
+
+              userInfoSpan.textContent = data.userInfo;
+              settingContainer.classList.remove('hidden');
+
+              const btnAddPassengerToGroup = document.getElementById(
+                'btn-add-passenger-to-group'
+              );
+              const btnMovePassengerToGroup = document.getElementById(
+                'btn-move-passenger-to-group'
+              );
+
+              if (data.data.serviceGroup !== 'unassigned') {
+                btnAddPassengerToGroup.disabled = true;
+                btnMovePassengerToGroup.disabled = false;
+              } else {
+                btnAddPassengerToGroup.disabled = false;
+                btnMovePassengerToGroup.disabled = true;
+              }
+
+              window.scrollTo({
+                top:
+                  Number.parseFloat(settingContainer.offsetTop) -
+                  Number.parseFloat(
+                    window.getComputedStyle(navbarContainer).height
+                  ) -
+                  10,
+                behavior: 'smooth',
+              });
+            }
+          },
+        });
+      };
+
+      const displayUserPaymentSetting = function (phone) {
+        selectedServiceGroup = undefined;
+        const divCon = document.createElement('div');
+
+        settingContainer.innerHTML = '';
+
+        settingContainer.appendChild(divCon);
+
+        const settingHtml = `
+                <h3>Manage user payment</h3>
+                <div class="items user-items">
+                  <div class="item1">
+                    <div class="label-info">
+                      <span id='span-user-info'>${''}</span>
+                    </div>
+                 </div>
+              <div class="item">
+                <input
+                      id="select-matching-group"
+                      class="select-matching-group list-item user-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="select-matching-group-search-list"
+                    class="temp-search-list service-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Matching service groups</label> </div>
+              </div>
+              <div class="item">
+                <input
+                      id="select-group"
+                      class="select-group list-item user-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="select-group-search-list"
+                    class="temp-search-list service-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Service groups</label> </div>
+              </div>
+
+              <div class='service-states'></div>
+
+              <button id='btn-add-passenger-to-group' class="btn-add-passenger-to-group">Add to group</button>
+              <button id='btn-move-passenger-to-group' class="btn-move-passenger-to-group">Move to group</button>
+              <button id='btn-notify-user' class="btn-notify-user">Notify</button>
+            </div>
+            `;
+
+        divCon.insertAdjacentHTML('beforebegin', settingHtml);
+        const url = window.origin;
+
+        $.ajax({
+          type: 'POST',
+          url: url + '/getUserSettingDetail',
+          data: {
+            phone,
+            places: placeLists && placeLists.length > 0 ? '0' : '1',
+          },
+          success: function (data) {
+            console.log(data);
+            userInfoSpan = document.getElementById('span-user-info');
+
+            console.log(data);
+            if (data?.states === 'success') {
+              currentUserSettingDataFromServer = data.data;
+              if (data.placeLists && data.placeLists.length)
+                placeLists = data.placeLists.flat(1).map(function (place) {
+                  return place.placeName.trim();
+                });
+
+              if (data.serviceLists && data.serviceLists.length)
+                currentUserServiceGroupList = data.serviceLists
+                  .flat(1)
+                  .map(function (service) {
+                    return service.serviceGroup.trim();
+                  });
+
+              userInfoSpan.textContent = data.userInfo;
+              settingContainer.classList.remove('hidden');
+
+              const btnAddPassengerToGroup = document.getElementById(
+                'btn-add-passenger-to-group'
+              );
+              const btnMovePassengerToGroup = document.getElementById(
+                'btn-move-passenger-to-group'
+              );
+
+              if (data.data.serviceGroup !== 'unassigned') {
+                btnAddPassengerToGroup.disabled = true;
+                btnMovePassengerToGroup.disabled = false;
+              } else {
+                btnAddPassengerToGroup.disabled = false;
+                btnMovePassengerToGroup.disabled = true;
+              }
+
+              window.scrollTo({
+                top:
+                  Number.parseFloat(settingContainer.offsetTop) -
+                  Number.parseFloat(
+                    window.getComputedStyle(navbarContainer).height
+                  ) -
+                  10,
+                behavior: 'smooth',
+              });
+            }
+          },
+        });
+      };
+
+      const displayServiceSetting = function (serviceGroupName) {
+        selectedServiceGroup = undefined;
+        const divCon = document.createElement('div');
+
+        settingContainer.innerHTML = '';
+
+        settingContainer.appendChild(divCon);
+
+        const settingHtml = `
+                <h3>Manage service</h3>
+                <div class="items service-items">
+                  <div class="item1">
+                    <div class="label-info">
+                      <span id='span-service-info'>${''}</span>
+                    </div>
+                 </div>
+                 <div class="item">
+                <input
+                      id="select-update-departure"
+                      class="select-update-departure list-item service-update-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="place-update-search-items"
+                    class="temp-search-list place-update-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Departure</label> </div>
+              </div>
+              <div class="item">
+                <input
+                      id="select-update-drop-off"
+                      class="select-update-drop-off list-item service-update-setting-input"
+                      type="text"
+                      required
+                    />
+                  <div
+                    id="place-update-search-items"
+                    class="temp-search-list place-update-temp-search-list"
+                  ></div>
+                <div class="label-item"> <label class="form__label">Drop-off</label> </div>
+
+              </div>
+
+              <div class="item">
+                <input class='service-update-setting-input' id='stipend-update' type="number" placeholder='In Birr' />
+                <div class="label-item"><label class="form__label">Stipend</label> </div>
+              </div>
+              <div class="item">
+                <input class='service-update-setting-input' id='distance-update' type="number" placeholder='In Km' />
+                <div class="label-item"><label class="form__label">Distance</label> </div>
+              </div>
+
+              <div class="item">
+
+                <input class='service-update-setting-input' id='service-update-group-name' type="text" />
+                <div class="label-item">  <label class="form__label">Service Groups</label> </div>
+              </div>
+
+              <div class="item">
+
+                <select class='service-update-setting-input' id='select-update-task-category' type="text">
+                  <option value="regular">Regular</option>
+                  <option value="part_time">Part time</option>
+                </select>
+                <div class="label-item">  <label class="form__label">Task Category</label>  </div>
+              </div>
+
+              <button id='btn-update-service-group' class="btn-add-service-group">Update</button>
+              <div></div>
+              <button id='btn-update-view' class="btn-update-view">View</button>
+            </div>
+            `;
+
+        divCon.insertAdjacentHTML('beforebegin', settingHtml);
+        const url = window.origin;
+        $.ajax({
+          type: 'POST',
+          url: url + '/serviceGroupDetail',
+          data: {
+            serviceGroup: serviceGroupName,
+            places: placeLists && placeLists.length > 0 ? '0' : '1',
+          },
+          success: function (data) {
+            console.log(data);
+            serviceInfoSpan = document.getElementById('span-service-info');
+
+            if (data?.states === 'success') {
+              currentServiceGroupFromServer = data.data;
+              if (data.placeLists && data.placeLists.length)
+                placeLists = data.placeLists.flat(1).map(function (place) {
+                  return place.placeName.trim();
+                });
+
+              if (data.serviceLists && data.serviceLists.length)
+                currentUserServiceGroupList = data.serviceLists
+                  .flat(1)
+                  .map(function (service) {
+                    return service.serviceGroup.trim();
+                  });
+
+              serviceInfoSpan.textContent = `Service Group: ${data.data.serviceGroup}, Left Seat: ${data.data.leftSeats}, Service States: ${data.data.serviceStates}`;
+              settingContainer.classList.remove('hidden');
+
+              window.scrollTo({
+                top:
+                  Number.parseFloat(settingContainer.offsetTop) -
+                  Number.parseFloat(
+                    window.getComputedStyle(navbarContainer).height
+                  ) -
+                  10,
+                behavior: 'smooth',
+              });
+            }
+          },
+        });
+      };
+
+      // Display Lists
+      const displayServiceList = function (data) {
+        if (data) {
+          listContainer.innerHTML = '';
+
+          const tableListsHtml = function (data, isFirstRow) {
+            return `
+                ${
+                  isFirstRow
+                    ? '<h3><span class="text-primary">Driver</span> Task List</h3>'
+                    : ''
+                }
+                <div class="list-row ${isFirstRow ? 'first-row' : ''}">
+                  <div class="cell-container">
+                    <div class="cell-header">Id</div>
+                    <div class="cell-data">${data.id}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">departure</div>
+                    <div class="cell-data">${data.departure}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Drop-of</div>
+                    <div class="cell-data">${data.dropOff}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Stipend</div>
+                    <div class="cell-data">${data.stipend}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Task category</div>
+                    <div class="cell-data">${data.taskCategory}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Capacity</div>
+                    <div class="cell-data">${data.capacity}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Left</div>
+                    <div class="cell-data">${data.leftSeats}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Service group</div>
+                    <div class="cell-data">
+                      ${data.serviceGroup}
+                    </div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Plate number</div>
+                    <div class="cell-data">${data.plateNumber}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Set By</div>
+                    <div class="cell-data">${data.assignedBy}</div>
+                  </div>
+                  <div class="btn-container">
+                    <button class="btn btn-remove-task" data-id="${
+                      data.id
+                    }" data-service-group="${data.serviceGroup}">Remove</button>
+                  </div>
+                </div>
+                    `;
+          };
+
+          if (data && data.length) {
+            data.forEach((element, i) => {
+              let isFirstRow = false;
+              if (i === 0) isFirstRow = true;
+              const tableListBody = tableListsHtml(element, isFirstRow);
+
+              listContainer.insertAdjacentHTML('beforeend', tableListBody);
+            });
+            listContainer.classList.remove('hidden');
+            window.scrollTo({
+              top:
+                Number.parseFloat(listContainer.offsetTop) -
+                Number.parseFloat(
+                  window.getComputedStyle(navbarContainer).height
+                ) -
+                10,
+              behavior: 'smooth',
+            });
+            return;
+          }
+          listContainer.innerHTML = '';
+          listContainer.classList.add('hidden');
+        }
+      };
+
+      const displayingDriverSearchTmpList = function (data, res) {
+        // console.log(data);
+        tempSearchList.innerHTML = '';
+
+        data.forEach((element) => {
+          const searchListHtml = `<div class="driver-item search-row">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span class="driver-phone">${element.phone}</span
+                        ><span class="driver-name">${element.info}</span>
+                      </div>`;
+          tempSearchList.insertAdjacentHTML('afterbegin', searchListHtml);
+        });
+        btnDriverList = document.querySelectorAll('.driver-item');
+        for (const btn of btnDriverList) {
+          btn.addEventListener('click', function () {
+            for (const node of this.childNodes) {
+              if (node.className === 'driver-phone') {
+                // console.log(node.textContent.trim());
+                displayDriverSetting(node.textContent.trim());
+              }
+            }
+          });
+        }
+      };
+
+      const displayingUserSearchTmpList = function (data, res, type) {
+        // console.log(data);
+        tempSearchList.innerHTML = '';
+
+        data.forEach((element) => {
+          const searchListHtml = `<div class="user-item search-row">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span class="user-phone">${element.phone}</span
+                        ><span class="user-name">${element.info}</span>
+                      </div>`;
+          tempSearchList.insertAdjacentHTML('afterbegin', searchListHtml);
+        });
+        btnDriverList = document.querySelectorAll('.user-item');
+        for (const btn of btnDriverList) {
+          btn.addEventListener('click', function () {
+            for (const node of this.childNodes) {
+              if (node.className === 'user-phone') {
+                // console.log(node.textContent.trim());
+                if (type === 'payment') {
+                  displayUserPaymentSetting(node.textContent.trim());
+                  return;
+                }
+                displayUserSetting(node.textContent.trim());
+              }
+            }
+          });
+        }
+      };
+
+      const displayingServiceSearchTmpList = function (data, res) {
+        // console.log(data);
+        tempSearchList.innerHTML = '';
+
+        data.forEach((element) => {
+          const searchListHtml = `<div class="service-item search-row">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span class="service-group">${element.serviceGroup}</span
+                        ><span class="service-info">, ${element.info}</span>
+                      </div>`;
+          tempSearchList.insertAdjacentHTML('afterbegin', searchListHtml);
+        });
+        const btnServiceList = document.querySelectorAll('.service-item');
+        for (const btn of btnServiceList) {
+          btn.addEventListener('click', function () {
+            for (const node of this.childNodes) {
+              if (node.className === 'service-group') {
+                // console.log(node.textContent.trim());
+                displayServiceSetting(node.textContent.trim());
+              }
+            }
+          });
+        }
+      };
+
+      // Event Handlers
+
+      body.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (
+          !element.classList.contains('sidebar') &&
+          !element.classList.contains('heading-items') &&
+          !(element.closest('.btn-menu')?.getAttribute('id') === 'btn-menu')
+        ) {
+          hideSidebar();
+        }
+      });
+
+      searchOverlay.addEventListener('click', function () {
+        hideTmpSearchAndOverlay();
+      });
+
+      searchContainer.addEventListener('click', function () {
+        hideTmpSearchAndOverlay();
+      });
+
+      hideSidebarItems();
+
+      sidebarContainer.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (element.classList.contains('sidebar-btn')) {
+          settingContainer.innerHTML = '';
+          settingContainer.classList.add('hidden');
+          hideDashboard();
+        }
+
+        if (element.classList.contains('heading-items')) hideSidebarItems();
+        if (element.classList.contains('drivers-heading')) {
+          element.style.backgroundColor = '#1C9971';
+          const itemContainer = element
+            .closest('li')
+            .querySelector('.item-group');
+          if (itemContainer) itemContainer.classList.remove('hidden-menu');
+        }
+        if (element.classList.contains('staff-heading')) {
+          element.style.backgroundColor = '#1C9971';
+          const itemContainer = element
+            .closest('li')
+            .querySelector('.item-group');
+          if (itemContainer) itemContainer.classList.remove('hidden-menu');
+        }
+        if (element.classList.contains('users-heading')) {
+          element.style.backgroundColor = '#1C9971';
+          const itemContainer = element
+            .closest('li')
+            .querySelector('.item-group');
+          if (itemContainer) itemContainer.classList.remove('hidden-menu');
+        }
+        if (element.classList.contains('dashboard-heading')) {
+          element.style.backgroundColor = '#1C9971';
+          const itemContainer = element
+            .closest('li')
+            .querySelector('.item-group');
+          if (itemContainer) itemContainer.classList.remove('hidden-menu');
+        }
+
+        if (element.getAttribute('id') === 'add-service') {
+          // render driver search box
+          renderDriverSearchBox();
+          hideSidebar();
+        }
+        if (element.getAttribute('id') === 'manage-user') {
+          // render user search box
+          renderUserSearchBox();
+          hideSidebar();
+        }
+
+        //
+        if (element.getAttribute('id') === 'manage-dashboard') {
+          settingContainer.innerHTML = '';
+          settingContainer.classList.add('hidden');
+          renderDashboard();
+          hideSidebar();
+          searchContainer.innerHTML = '';
+        }
+        // manage-service
+        if (element.getAttribute('id') === 'manage-service') {
+          // render service search box
+          renderServiceSearchBox();
+          hideSidebar();
+        }
+      });
+
+      navbarContainer.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (element.closest('.btn-menu')?.getAttribute('id') === 'btn-menu') {
+          if (sidebarContainer.classList.contains('hidden-sidebar-mobile')) {
+            sidebarContainer.classList.remove('hidden-sidebar');
+            sidebarContainer.classList.remove('hidden-sidebar-mobile');
+          } else {
+            sidebarContainer.classList.add('hidden-sidebar');
+            sidebarContainer.classList.add('hidden-sidebar-mobile');
+          }
+          hideLists();
+        }
+      });
+
+      settingContainer.addEventListener('keyup', function (e) {
+        const element = e.target;
+
+        if (element.getAttribute('id') === 'select-departure') {
+          const searchLists = findFromList(placeLists, element.value);
+          element
+            .closest('.item')
+            .querySelector('.place-temp-search-list').innerHTML = '';
+          searchLists &&
+            searchLists.length &&
+            searchLists.forEach((listItem) =>
+              element
+                .closest('.item')
+                .querySelector('.place-temp-search-list')
+                .insertAdjacentHTML(
+                  'afterbegin',
+                  `<div id='place-search-items' class='search-items'>${listItem}</div>`
+                )
+            );
+          element
+            .closest('.item')
+            .querySelector('.place-temp-search-list')
+            .classList.remove('hidden');
+        }
+
+        if (element.getAttribute('id') === 'select-drop-off') {
+          const searchLists = findFromList(placeLists, element.value);
+          element
+            .closest('.item')
+            .querySelector('.place-temp-search-list').innerHTML = '';
+          searchLists &&
+            searchLists.length &&
+            searchLists.forEach((listItem) =>
+              element
+                .closest('.item')
+                .querySelector('.place-temp-search-list')
+                .insertAdjacentHTML(
+                  'afterbegin',
+                  `<div id='place-search-items' class='search-items'>${listItem}</div>`
+                )
+            );
+          element
+            .closest('.item')
+            .querySelector('.place-temp-search-list')
+            .classList.remove('hidden');
+        }
+
+        if (element.getAttribute('id') === 'select-update-departure') {
+          const searchLists = findFromList(placeLists, element.value);
+          element
+            .closest('.item')
+            .querySelector('.place-update-temp-search-list').innerHTML = '';
+          searchLists &&
+            searchLists.length &&
+            searchLists.forEach((listItem) =>
+              element
+                .closest('.item')
+                .querySelector('.place-update-temp-search-list')
+                .insertAdjacentHTML(
+                  'afterbegin',
+                  `<div id='place-update-search-items' class='search-items'>${listItem}</div>`
+                )
+            );
+          element
+            .closest('.item')
+            .querySelector('.place-update-temp-search-list')
+            .classList.remove('hidden');
+        }
+
+        if (element.getAttribute('id') === 'select-update-drop-off') {
+          const searchLists = findFromList(placeLists, element.value);
+          element
+            .closest('.item')
+            .querySelector('.place-update-temp-search-list').innerHTML = '';
+          searchLists &&
+            searchLists.length &&
+            searchLists.forEach((listItem) =>
+              element
+                .closest('.item')
+                .querySelector('.place-update-temp-search-list')
+                .insertAdjacentHTML(
+                  'afterbegin',
+                  `<div id='place-update-search-items' class='search-items'>${listItem}</div>`
+                )
+            );
+          element
+            .closest('.item')
+            .querySelector('.place-update-temp-search-list')
+            .classList.remove('hidden');
+        }
+
+        if (element.getAttribute('id') === 'select-group') {
+          const url = window.location.origin;
+          $.ajax({
+            type: 'GET',
+            url: url + '/serviceGroupSearch?searchValue=' + element.value,
+            success: function (data) {
+              const searchLists = data;
+              if (searchLists) {
+                element
+                  .closest('.item')
+                  .querySelector('.service-temp-search-list').innerHTML = '';
+                searchLists &&
+                  searchLists.length &&
+                  searchLists.forEach((listItem) =>
+                    element
+                      .closest('.item')
+                      .querySelector('.service-temp-search-list')
+                      .insertAdjacentHTML(
+                        'afterbegin',
+                        `<div id='user-search-items' class='search-items'>${listItem}</div>`
+                      )
+                  );
+                element
+                  .closest('.item')
+                  .querySelector('.service-temp-search-list')
+                  .classList.remove('hidden');
+              }
+            },
+          });
+        }
+
+        if (element.getAttribute('id') === 'select-matching-group') {
+          const searchLists = findFromServiceList(
+            currentUserServiceGroupList,
+            element.value
+          );
+          element
+            .closest('.item')
+            .querySelector('.service-temp-search-list').innerHTML = '';
+          searchLists &&
+            searchLists.length &&
+            searchLists.forEach((listItem) =>
+              element
+                .closest('.item')
+                .querySelector('.service-temp-search-list')
+                .insertAdjacentHTML(
+                  'afterbegin',
+                  `<div id='user-search-items' class='search-items'>${listItem}</div>`
+                )
+            );
+          element
+            .closest('.item')
+            .querySelector('.service-temp-search-list')
+            .classList.remove('hidden');
+        }
+      });
+
+      settingContainer.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (element.getAttribute('id') === 'place-search-items') {
+          const el = element.closest('.item');
+          if (
+            !checkForSimilarPlaceInputs(
+              settingContainer.querySelectorAll('.list-item'),
+              element.textContent
+            )
+          ) {
+            const inputPlace = el.querySelector('.list-item');
+            inputPlace.value = element.textContent;
+            const evt = document.createEvent('HTMLEvents');
+            evt.initEvent('change', false, true);
+            inputPlace.dispatchEvent(new Event('change', { bubbles: true }));
+            return;
+          }
+          displayToast('departure and drop off can not be the same!');
+
+          hideTmpSearch('place-temp-search-list');
+          return;
+        }
+        hideTmpSearch('place-temp-search-list');
+
+        if (element.getAttribute('id') === 'place-update-search-items') {
+          const el = element.closest('.item');
+          console.log(element, el);
+          if (
+            !checkForSimilarPlaceInputs(
+              settingContainer.querySelectorAll('.list-item'),
+              element.textContent
+            )
+          ) {
+            const inputPlace = el.querySelector('.list-item');
+            inputPlace.value = element.textContent;
+            const evt = document.createEvent('HTMLEvents');
+            evt.initEvent('change', false, true);
+            inputPlace.dispatchEvent(new Event('change', { bubbles: true }));
+          } else displayToast('departure and drop off can not be the same!');
+
+          hideTmpSearch('place-update-temp-search-list');
+        } else {
+          hideTmpSearch('place-update-temp-search-list');
+        }
+
+        if (element.getAttribute('id') === 'user-search-items') {
+          const el = element.closest('.item');
+
+          const inputMatchingService = el.querySelector('.list-item');
+          inputMatchingService.value = element.textContent;
+          const evt = document.createEvent('HTMLEvents');
+          evt.initEvent('change', false, true);
+          inputMatchingService.dispatchEvent(
+            new Event('change', { bubbles: true })
+          );
+          hideTmpSearch('service-temp-search-list');
+          return;
+        }
+        hideTmpSearch('service-temp-search-list');
+
+        if (element.getAttribute('id') === 'btn-update-service-group') {
+          const rawInputValues = {};
+          const inputTestResult = { error: false, warning: false, target: [] };
+          const inputsForDriverSetting = element
+            .closest('.items')
+            ?.querySelectorAll('.service-update-setting-input');
+
+          [...inputsForDriverSetting].forEach(function (el) {
+            el.style.border = 'none';
+            if (
+              el.classList.contains('select-update-departure') ||
+              el.classList.contains('select-update-drop-off')
+            ) {
+              if (
+                !placeLists.some(function (ele) {
+                  return ele === el.value;
+                })
+              ) {
+                displayToast('invalid departure or drop off', 'error');
+                inputTestResult.error = true;
+                inputTestResult.target.push(el);
+                return;
+              }
+            }
+
+            if (el.getAttribute('id') === 'stipend-update') {
+              if (!el.value) {
+                displayToast('Stipend cannot be empty!', 'error');
+                inputTestResult.error = true;
+                inputTestResult.target.push(el);
+                return;
+              }
+              if (el.value && +el.value < 1000) {
+                displayToast('Stipend too small!', 'warning');
+                inputTestResult.warning = true;
+                el.elWarning = true;
+                inputTestResult.target.push(el);
+              }
+            }
+
+            if (el.getAttribute('id') === 'distance-update') {
+              if (!el.value) {
+                displayToast('Distance cannot be empty!', 'error');
+                inputTestResult.error = true;
+                inputTestResult.target.push(el);
+                return;
+              }
+              if (el.value && +el.value < 1) {
+                displayToast('Distance too short!', 'warning');
+                inputTestResult.warning = true;
+                el.elWarning = true;
+                inputTestResult.target.push(el);
+              }
+            }
+            // removing '-' and select
+            const elementName = el
+              .getAttribute('id')
+              .split('-')
+              .map((id, i) => (i > 0 ? id[0].toUpperCase() + id.slice(1) : id))
+              .map((id, i, arr) =>
+                arr[0] === 'select' && i === 1
+                  ? id[0].toLowerCase() + id.slice(1)
+                  : arr[0] !== 'select' || i > 1
+                  ? id
+                  : ''
+              )
+              .join('');
+            rawInputValues[elementName] = el.value.trim();
+          });
+
+          if (currentServiceGroupFromServer) {
+            rawInputValues.phone = currentServiceGroupFromServer.detail.phone;
+            rawInputValues.name = currentServiceGroupFromServer.detail.name;
+            rawInputValues.plateNumber =
+              currentServiceGroupFromServer.detail.plateNumber;
+            rawInputValues.capacity =
+              currentServiceGroupFromServer.detail.availableVehicleSeat;
+            rawInputValues.oldServiceGroupName =
+              currentServiceGroupFromServer.detail.serviceGroup;
+          }
+
+          if (inputTestResult.error) {
+            // displayToast("Please fill required values!", "error");
+            inputTestResult.target.forEach(function (el) {
+              el.style.border = '1px solid red';
+            });
+            return;
+          }
+          if (inputTestResult.warning) {
+            inputTestResult.target.forEach(function (el) {
+              if (el?.elWarning === true) el.style.border = '1px solid orange';
+            });
+          }
+          if (rawInputValues)
+            saveDriverSettingOnServer(rawInputValues, '/updateServiceGroup');
+          else displayToast('Something went wrong!', 'error');
+        }
+        if (element.getAttribute('id') === 'btn-add-service-group') {
+          const rawInputValues = {};
+          const inputTestResult = { error: false, warning: false, target: [] };
+          const inputsForDriverSetting = element
+            .closest('.items')
+            ?.querySelectorAll('.driver-setting-input');
+
+          [...inputsForDriverSetting].forEach(function (el) {
+            el.style.border = 'none';
+            if (
+              el.classList.contains('select-departure') ||
+              el.classList.contains('select-drop-off')
+            ) {
+              if (
+                !placeLists.some(function (ele) {
+                  return ele === el.value;
+                })
+              ) {
+                displayToast('invalid departure or drop off', 'error');
+                inputTestResult.error = true;
+                inputTestResult.target.push(el);
+                return;
+              }
+            }
+            if (el.getAttribute('id') === 'stipend') {
+              if (!el.value) {
+                displayToast('Stipend cannot be empty!', 'error');
+                inputTestResult.error = true;
+                inputTestResult.target.push(el);
+                return;
+              }
+              if (el.value && +el.value < 1000) {
+                displayToast('Stipend too small!', 'warning');
+                inputTestResult.warning = true;
+                el.elWarning = true;
+                inputTestResult.target.push(el);
+              }
+            }
+            if (el.getAttribute('id') === 'distance') {
+              if (!el.value) {
+                displayToast('Distance cannot be empty!', 'error');
+                inputTestResult.error = true;
+                inputTestResult.target.push(el);
+                return;
+              }
+              if (el.value && +el.value < 1) {
+                displayToast('Distance too short!', 'warning');
+                inputTestResult.warning = true;
+                el.elWarning = true;
+                inputTestResult.target.push(el);
+              }
+            }
+            // removing '-' and select
+            const elementName = el
+              .getAttribute('id')
+              .split('-')
+              .map((id, i) => (i > 0 ? id[0].toUpperCase() + id.slice(1) : id))
+              .map((id, i, arr) =>
+                arr[0] === 'select' && i === 1
+                  ? id[0].toLowerCase() + id.slice(1)
+                  : arr[0] !== 'select' || i > 1
+                  ? id
+                  : ''
+              )
+              .join('');
+            rawInputValues[elementName] = el.value.trim();
+          });
+
+          if (driverSettingDataFromServer) {
+            rawInputValues.phone = driverSettingDataFromServer.phone;
+            rawInputValues.name =
+              driverSettingDataFromServer.firstName +
+              ' ' +
+              driverSettingDataFromServer.middleName;
+            rawInputValues.plateNumber =
+              driverSettingDataFromServer.plateNumber;
+            rawInputValues.capacity = driverSettingDataFromServer.capacity;
+          }
+
+          if (inputTestResult.error) {
+            // displayToast("Please fill required values!", "error");
+            inputTestResult.target.forEach(function (el) {
+              el.style.border = '1px solid red';
+            });
+            return;
+          }
+          if (inputTestResult.warning) {
+            inputTestResult.target.forEach(function (el) {
+              if (el?.elWarning === true) el.style.border = '1px solid orange';
+            });
+          }
+          if (rawInputValues)
+            saveDriverSettingOnServer(rawInputValues, '/addServiceGroup');
+          else displayToast('Something went wrong!', 'error');
+        }
+
+        if (element.getAttribute('id') === 'btn-view') {
+          driverSettingDataFromServer?.phone &&
+            listServices(driverSettingDataFromServer.phone);
+        }
+        if (element.getAttribute('id') === 'btn-update-view') {
+          currentServiceGroupFromServer?.detail.phone &&
+            listServices(currentServiceGroupFromServer.detail.phone);
+        }
+
+        if (element.getAttribute('id') === 'btn-add-passenger-to-group') {
+          if (selectedServiceGroup && currentUserSettingDataFromServer) {
+            modalWindow.innerHTML = '';
+            const modalHtml = `
+                  <form method="dialog">
+                      <h3>Confirm</h3>
+                      <p class='bg-light'>Add ${currentUserSettingDataFromServer.firstName} to: <span>${selectedServiceGroup}</span></p>
+                    <div>
+                      <button class="btn">cancel</button>
+                      <button  class="btn btn-warning" id='add-user-to-service-group' data-service-group='${selectedServiceGroup}' data-phone='${currentUserSettingDataFromServer.phone}'>Confirm</button>
+                    </div>
+                  </form>`;
+            modalWindow.insertAdjacentHTML('afterbegin', modalHtml);
+            modalWindow.showModal();
+            return;
+          }
+
+          displayToast('Please select a valid service group', 'warning');
+        }
+
+        if (element.getAttribute('id') === 'btn-move-passenger-to-group') {
+          if (selectedServiceGroup && currentUserSettingDataFromServer) {
+            modalWindow.innerHTML = '';
+            const modalHtml = `
+                  <form method="dialog">
+                      <h3>Confirm</h3>
+                      <p class='bg-light'>Move ${currentUserSettingDataFromServer.firstName} to: <span>${selectedServiceGroup}</span></p>
+                    <div>
+                      <button class="btn">cancel</button>
+                      <button  class="btn btn-warning" id='move-user-to-service-group' data-service-group='${selectedServiceGroup}' data-phone='${currentUserSettingDataFromServer.phone}'>Confirm</button>
+                    </div>
+                  </form>`;
+            modalWindow.insertAdjacentHTML('afterbegin', modalHtml);
+            modalWindow.showModal();
+            return;
+          }
+
+          displayToast('Please select a valid service group', 'warning');
+        }
+      });
+
+      settingContainer.addEventListener('change', function (e) {
+        const element = e.target;
+        if (element.getAttribute('id') === 'select-departure') {
+          const dropOff = element
+            .closest('.items')
+            ?.querySelector('#select-drop-off');
+          if (element.value.length)
+            if (
+              placeLists.some(function (ele) {
+                return ele === dropOff.value;
+              }) &&
+              placeLists.some(function (ele) {
+                return ele === element.value;
+              })
+            ) {
+              const serviceGroup = element
+                .closest('.items')
+                ?.querySelector('#service-group-name');
+              serviceGroup.value = `${driverSettingDataFromServer.plateNumber}-${driverSettingDataFromServer.firstName}:=>${element.value}-${dropOff.value}`;
+            }
+        }
+
+        if (element.getAttribute('id') === 'select-drop-off') {
+          const departure = element
+            .closest('.items')
+            ?.querySelector('#select-departure');
+
+          if (element.value.length)
+            if (
+              placeLists.some(function (ele) {
+                return ele === departure.value;
+              }) &&
+              placeLists.some(function (ele) {
+                return ele === element.value;
+              })
+            ) {
+              const serviceGroup = element
+                .closest('.items')
+                ?.querySelector('#service-group-name');
+              serviceGroup.value = `${
+                driverSettingDataFromServer.plateNumber
+              }-${
+                driverSettingDataFromServer.firstName
+              }:-${departure.value.replaceAll(
+                ' ',
+                '-'
+              )}=>${element.value.replaceAll(' ', '-')}`;
+            }
+        }
+        // im here
+        if (element.getAttribute('id') === 'select-update-departure') {
+          const dropOff = element
+            .closest('.items')
+            ?.querySelector('#select-update-drop-off');
+          if (element.value.length)
+            if (
+              placeLists.some(function (ele) {
+                return ele === dropOff.value;
+              }) &&
+              placeLists.some(function (ele) {
+                return ele === element.value;
+              })
+            ) {
+              const serviceGroup = element
+                .closest('.items')
+                ?.querySelector('#service-update-group-name');
+              serviceGroup.value = `${driverSettingDataFromServer.plateNumber}-${driverSettingDataFromServer.firstName}:=>${element.value}-${dropOff.value}`;
+            }
+        }
+
+        if (element.getAttribute('id') === 'select-update-drop-off') {
+          const departure = element
+            .closest('.items')
+            ?.querySelector('#select-update-departure');
+
+          if (element.value.length)
+            if (
+              placeLists.some(function (ele) {
+                return ele === departure.value;
+              }) &&
+              placeLists.some(function (ele) {
+                return ele === element.value;
+              })
+            ) {
+              const serviceGroup = element
+                .closest('.items')
+                ?.querySelector('#service-update-group-name');
+              serviceGroup.value = `${
+                currentServiceGroupFromServer.plateNumber
+              }-${
+                currentServiceGroupFromServer.detail.name.split(' ')[0]
+              }:-${departure.value.replaceAll(
+                ' ',
+                '-'
+              )}=>${element.value.replaceAll(' ', '-')}`;
+            }
+        }
+
+        if (element.getAttribute('id') === 'select-matching-group') {
+          selectedServiceGroup = undefined;
+
+          const parentEl = element.closest('.items');
+          const serviceDetailContainer =
+            parentEl?.querySelector('.service-states');
+
+          // clear service group
+          parentEl.querySelector('#select-group').value = '';
+
+          serviceDetailContainer.innerHTML = '';
+          if (currentUserServiceGroupList.includes(element.value)) {
+            selectedServiceGroup = element.value.trim();
+            const url = window.origin;
+            $.ajax({
+              type: 'GET',
+              url: url + `/serviceGroupDetail?serviceGroup=${element.value}`,
+              data: '',
+              success: function (data) {
+                if (data.states === 'success') {
+                  data = data.data;
+                  if (serviceDetailContainer) {
+                    serviceDetailContainer.insertAdjacentHTML(
+                      'afterBegin',
+                      `<span>Service Group: ${data.serviceGroup}, Left Seat: ${data.leftSeats}, Service States: ${data.serviceStates}</span>`
+                    );
+                  }
+                }
+              },
+            });
+            return;
+          }
+          serviceDetailContainer.insertAdjacentHTML(
+            'afterBegin',
+            `<span>Invalid service group!</span>`
+          );
+        }
+
+        if (element.getAttribute('id') === 'select-group') {
+          selectedServiceGroup = undefined;
+
+          const parentEl = element.closest('.items');
+          const serviceDetailContainer =
+            parentEl?.querySelector('.service-states');
+          // clear service group
+          parentEl.querySelector('#select-matching-group').value = '';
+
+          serviceDetailContainer.innerHTML = '';
+          selectedServiceGroup = element.value.trim();
+          const url = window.origin;
+          $.ajax({
+            type: 'GET',
+            url: url + `/serviceGroupDetail?serviceGroup=${element.value}`,
+            data: '',
+            success: function (data) {
+              if (data.states === 'success') {
+                data = data.data;
+                if (serviceDetailContainer) {
+                  serviceDetailContainer.insertAdjacentHTML(
+                    'afterBegin',
+                    `<span>Service Group: ${data.serviceGroup}, Left Seat: ${data.leftSeats}, Service States: ${data.serviceStates}</span>`
+                  );
+                }
+                return;
+              }
+              if (data.states === 'warning') {
+                serviceDetailContainer.insertAdjacentHTML(
+                  'afterBegin',
+                  `<span>${data.msg}</span>`
+                );
+                return;
+              }
+            },
+            error: function () {
+              serviceDetailContainer.insertAdjacentHTML(
+                'afterBegin',
+                `<span>check your network and try again!</span>`
+              );
+            },
+          });
+        }
+      });
+
+      listContainer.addEventListener('click', function (e) {
+        const element = e.target;
+
+        // console.log(element.classList.contains("btn-remove-task"));
+
+        if (element.classList.contains('btn-remove-task')) {
+          console.dir(element.dataset.id);
+          if (element.dataset && element.dataset.id) {
+            modalWindow.innerHTML = '';
+            const modalHtml = `
+                  <form method="dialog">
+                      <h3>Warning</h3>
+                      <p class='bg-light'>Remove Service Group: <span>${element.dataset.serviceGroup}</span></p>
+                    <div>
+                      <button class="btn">cancel</button>
+                      <button  class="btn btn-warning" id='remove-service' data-id='${element.dataset.id}'>Submit</button>
+                    </div>
+                  </form>`;
+            modalWindow.insertAdjacentHTML('afterbegin', modalHtml);
+            modalWindow.showModal();
+          }
+        }
+      });
+
+      modalWindow.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (element && element.getAttribute('id') === 'remove-service') {
+          removeServiceGroup(
+            {
+              id: element.dataset.id,
+              phone:
+                driverSettingDataFromServer?.phone ||
+                currentServiceGroupFromServer?.detail.phone,
+            },
+            '/removeServiceGroup'
+          );
+        }
+
+        if (
+          element &&
+          element.getAttribute('id') === 'add-user-to-service-group'
+        ) {
+          const data = {
+            serviceGroup: element.dataset.serviceGroup,
+            phone: element.dataset.phone,
+          };
+          addUserToService(data, '/addUserToServiceGroup');
+        }
+        if (
+          element &&
+          element.getAttribute('id') === 'move-user-to-service-group'
+        ) {
+          const data = {
+            serviceGroup: element.dataset.serviceGroup,
+            phone: element.dataset.phone,
+          };
+          moveUserToService(data, '/moveUserToServiceGroup');
+        }
+      });
+    </script>
+  </body>
+</html>
