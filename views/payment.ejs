@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="icon"
+      href="../views/images/Tofi logo.png"
+      sizes="32x32"
+      type="image/png"
+    />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+
+    <link rel="stylesheet" href="../css/utilities.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/payment_style.css" />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <title>Payment</title>
+  </head>
+
+  <style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+
+    .ui-widget-header,
+    .ui-state-default,
+    ui-button {
+      background: #b9cd6d;
+      border: 1px solid #d6ec86;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .noclose .ui-dialog-titlebar-close {
+      display: none;
+    }
+  </style>
+
+  <body>
+    <div id="search-overlay" class="hidden"></div>
+
+    <div class="container main flex-row">
+      <div class="container d-lg-flex">
+        <div id="box-2" class="container box-2 flex-row">
+          <div class="container box-inner-2 d-lg-flex">
+            <div class="container">
+              <div class="container-stud-search-info stud-search-info">
+                <div>
+                  <p class="fw-bold">Payment Details</p>
+                  <p class="dis mb-3">
+                    Complete your payment by providing your payment details
+                  </p>
+                </div>
+                <div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-2 mt-0"
+                  >
+                    <p class="fw-bold">
+                      User Detail =>
+                      <span id="selected-user" style="font-weight: 100"></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <form
+              action=""
+              id="payment-form-container"
+              class="container flex-row"
+            >
+              <div class="container form-flex d-lg-flex">
+                <div class="form-container mb-3">
+                  <div id="user-search-container" class="search-container">
+                    <form id="user-search-form" action="">
+                      <input
+                        id="input-user-search"
+                        type="text"
+                        placeholder="search user"
+                      />
+                      <!-- <button id="btn-add" class="btn" type="button">
+                      ADD
+                    </button> -->
+                    </form>
+                    <div
+                      id="temp-user-search-list"
+                      class="temp-search-list hidden"
+                    ></div>
+                  </div>
+                  <div id="added_users" class="mb-2"></div>
+                  <div
+                    id="lists"
+                    class="mt-2 ms-2"
+                    style="max-width: 300px; z-index: 20"
+                  ></div>
+                  <div id="reasonDiv">
+                    <p class="dis fw-bold mb-2">Reason</p>
+                    <select
+                      id="payment-reason"
+                      class="form-select"
+                      aria-label=""
+                    >
+                      <option value=""></option>
+                      <option value="monthly_payment">Monthly payment</option>
+                      <option value="registration">Registration</option>
+                      <option value="other">Other</option>
+                    </select>
+                    <div class="d-flex">
+                      <select
+                        id="month-select"
+                        class="form-select my"
+                        aria-label=""
+                      >
+                        <option></option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                      </select>
+                    </div>
+                    <p
+                      class="dis fw-bold mb-2"
+                      style="color: red"
+                      id="month_warning"
+                    ></p>
+                    <div id="added_months" class="mb-2"></div>
+                  </div>
+                  <div class="mt-3">
+                    <p class="dis fw-bold mb-1">Payed for year</p>
+                    <select
+                      id="payment-year"
+                      class="form-select year"
+                      aria-label=""
+                    ></select>
+                  </div>
+                  <p class="dis fw-bold mb-2 mt-3">Amount in birr</p>
+                  <div
+                    class="d-flex align-items-center justify-content-between card-atm border rounded mb-3"
+                  >
+                    <input
+                      type="number"
+                      id="payment-amount"
+                      class="form-control"
+                      value=""
+                      placeholder="Amount in birr"
+                      onkeypress="validate(event)"
+                    />
+                  </div>
+                </div>
+                <div class="form-container">
+                  <div class="my-3 cardname">
+                    <p class="dis fw-bold mb-2">Payer Name</p>
+                    <p>
+                      <input
+                        class="form-control"
+                        id="payed-by"
+                        type="text"
+                        value=""
+                        placeholder="Payed by ..."
+                      />
+                    </p>
+                  </div>
+
+                  <div class="address">
+                    <div class="my-3">
+                      <p class="dis fw-bold mb-2">TIN Number</p>
+                      <div class="inputWithcheck">
+                        <input
+                          id="tin-number"
+                          class="form-control"
+                          type="text"
+                          value=""
+                        />
+                        <span class="fas fa-check"></span>
+                      </div>
+                    </div>
+                    <div class="my-3">
+                      <p class="dis fw-bold mb-2">Description</p>
+                      <input
+                        class="form-control text-uppercase"
+                        type="text"
+                        value=""
+                        id="payment-description"
+                      />
+                    </div>
+
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-2"
+                    >
+                      <p id="receipt"></p>
+                      <p>
+                        <span
+                          id="tax-payment-amount"
+                          class="fas fa-dollar-sign"
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-2"
+                  >
+                    <p class="fw-bold">Net</p>
+                    <p class="fw-bold"><span id="net-payment-amount"></span></p>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-2"
+                  >
+                    <p class="fw-bold">Total</p>
+                    <p class="fw-bold">
+                      <span id="total-payment-amount"></span>
+                    </p>
+                  </div>
+
+                  <div id="btn-pay" class="btn btn-primary mt-2">
+                    Pay<span class="ms-1" id="btn_total"></span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="box-3" class="box-3">
+        <div class="box-inner-3">
+          <div>
+            <p class="fw-bold">Payment Lists</p>
+            <p class="dis mb-3">
+              Find your payment by providing your payment details
+            </p>
+          </div>
+          <div id="payment-search-container" class="search-container">
+            <form id="payment-search-form" action="">
+              <input
+                id="input-payment-search"
+                type="text"
+                placeholder="search payment"
+              />
+            </form>
+            <div
+              id="temp-payment-search-list"
+              class="temp-search-list hidden"
+            ></div>
+          </div>
+
+          <div id="list-container" class="list-container hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let receiptType =
+        "<%=(typeof paymentInfo!='undefined' )? paymentInfo.detail:''%>";
+      receiptType = receiptType.split('-');
+
+      let receiptHtml = '';
+      if (receiptType) {
+        receiptHtml = `${receiptType?.[0].toUpperCase()}<span>(${
+          receiptType?.[1]
+        }%)</span>`;
+      }
+      // Selecting Elements
+
+      // Containers
+
+      const listContainer = document.querySelector('#list-container');
+
+      const paymentFormContainer = document.querySelector(
+        '#payment-form-container'
+      );
+
+      document
+        .querySelector('#receipt')
+        .insertAdjacentHTML('afterbegin', receiptHtml);
+
+      const paymentSearchContainer = document.getElementById(
+        'payment-search-container'
+      );
+      const userSearchContainer = document.getElementById(
+        'user-search-container'
+      );
+      // const tempPaymentSearchList = document.getElementById(
+      //   "temp-payment-search-list"
+      // );
+      const tempUserSearchList = document.getElementById(
+        'temp-user-search-list'
+      );
+      // Buttons
+      const searchOverlay = document.getElementById('search-overlay');
+      const btnAddPayment = document.getElementById('btn-add');
+
+      //Search Inputs
+      let paymentSearchInEl = document.getElementById('input-payment-search');
+      let userSearchInEl = document.getElementById('input-user-search');
+
+      // payment Inputs
+      const inputPaymentAmount = document.getElementById('payment-amount');
+      const inputPaymentPayer = document.getElementById('payed-by');
+      const inputPaymentTin = document.getElementById('tin-number');
+      const inputPaymentDescription = document.getElementById(
+        'payment-description'
+      );
+
+      // Selects
+      // payment selects
+      const selectPaymentReason = document.getElementById('payment-reason');
+      const selectPaymentMonth = document.getElementById('month-select');
+      const selectPaymentYear = document.getElementById('payment-year');
+
+      // Spans
+      const spanPaymentTotal = document.getElementById('total-payment');
+      const spanCurrentUsername = document.getElementById('selected-user');
+
+      // Variables
+      let currentPaymentPosition = '';
+      let selectedUserUInfo = {};
+      const toastMsg = {};
+      let selectedUserPhone;
+      let selectedUserName;
+      let paymentDetail = {};
+
+      // Functions
+
+      // List Years in dropdown list
+
+      function fillYearSelect() {
+        const date = new Date().getFullYear();
+
+        for (let i = 0; i <= 5; i++) {
+          selectPaymentYear.insertAdjacentHTML(
+            'beforeend',
+            `<option>${date + i}</option>`
+          );
+        }
+      }
+
+      fillYearSelect();
+
+      // Input Number Validation
+      function validate(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+          theEvent.returnValue = false;
+          if (theEvent.preventDefault) {
+            theEvent.preventDefault();
+          }
+        }
+      }
+
+      // Toast
+      function displayToast(msg = 'message', states) {
+        let background = 'linear-gradient(to right, #28a745, #28a745)';
+        if (states === 'error')
+          background = 'linear-gradient(to right, #ff5f6d, #ff5f6d)';
+        if (states === 'warning')
+          background = 'linear-gradient(to right, #F7E283, #F7E283)';
+
+        Toastify({
+          text: msg,
+          duration: 3000,
+          newWindow: true,
+          close: true,
+          gravity: 'top', // `top` or `bottom`
+          position: 'right', // `left`, `center` or `right`
+          stopOnFocus: false, // Prevents dismissing of toast on hover
+          style: {
+            background,
+          },
+          onClick: function () {}, // Callback after click
+        }).showToast();
+      }
+
+      // check for valid payment inputs
+      const checkPaymentList = function () {
+        let countErrors = 0;
+        const elValueLists = {
+          paymentReason: ['select payment reason', selectPaymentReason],
+          paymentMonth: ['select payment month', selectPaymentMonth],
+          paymentYear: ['select payment year', selectPaymentYear],
+          paymentAmount: ['insert payment amount', inputPaymentAmount],
+          payerDetail: ['insert payer detail', inputPaymentPayer],
+          paymentTin: ['insert tin number', inputPaymentTin],
+          paymentDescription: [
+            'insert payment description',
+            inputPaymentDescription,
+          ],
+        };
+
+        // Displaying Error
+        const showError = function (el, msg) {
+          el.style.border = '1px solid red';
+
+          displayToast(msg, 'warning');
+        };
+
+        if (
+          [...Object.entries(elValueLists)].some(
+            (el) => el[1][1].value.trim() === ''
+          )
+        ) {
+          [...Object.entries(elValueLists)].forEach(
+            (el) => (el[1][1].style.border = '1px solid #ced4da')
+          );
+
+          let checkedEl = [...Object.entries(elValueLists)].find(
+            (el) =>
+              (el[1][1].value.trim() === '' || el[1][1].value.trim() === '0') &&
+              el[0] !== 'paymentTin'
+          );
+
+          if (countErrors === 0) {
+            checkedEl[1][1].scrollIntoView();
+            countErrors++;
+          }
+
+          showError(checkedEl[1][1], `please add ${checkedEl[0]}`);
+          return false;
+        }
+
+        return elValueLists;
+      };
+
+      // Display Lists
+      const displayPaymentList = function (data) {
+        if (data) {
+          listContainer.innerHTML = '';
+
+          const tableListsHtml = function (data, isFirstRow) {
+            return `
+                ${
+                  isFirstRow
+                    ? '<h3><span class="text-primary">Payment</span> List</h3>'
+                    : ''
+                }
+                <div class="list-row ${isFirstRow ? 'first-row' : ''}">
+                  <div class="cell-container">
+                    <div class="cell-header">🔽</div>
+                    <div class="cell-data">${data.id}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Pay-ID</div>
+                    <div class="cell-data">${data.paymentId}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Phone</div>
+                    <div class="cell-data">${data.phone}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Name</div>
+                    <div class="cell-data">${data.name}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Detail</div>
+                    <div class="cell-data">${data.paymentName}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Amount</div>
+                    <div class="cell-data">${data.amount}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Description</div>
+                    <div class="cell-data">${data.description}</div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Date</div>
+                    <div class="cell-data">
+                      ${data.date}
+                    </div>
+                  </div>
+                  <div class="cell-container">
+                    <div class="cell-header">Confirmed By</div>
+                    <div class="cell-data">${data.confirmedBy}</div>
+                  </div>
+                
+                  <div class="btn-container">
+                    <button class="btn btn-print-payment" data-id="${
+                      data.id
+                    }" data-payment-id="${data.paymentId}">Print</button>
+                  </div>
+                </div>
+                    `;
+          };
+
+          if (data && data.length) {
+            data.forEach((element, i) => {
+              let isFirstRow = false;
+              if (i === 0) isFirstRow = true;
+              const tableListBody = tableListsHtml(element, isFirstRow);
+
+              listContainer.insertAdjacentHTML('beforeend', tableListBody);
+            });
+            listContainer.classList.remove('hidden');
+            // listContainer.scrollIntoView({ behavior: 'smooth' });
+            return;
+          }
+          listContainer.innerHTML = '';
+          listContainer.classList.add('hidden');
+        }
+      };
+
+      const addPayment = function (studId, stName) {
+        let selectedPayment;
+        const detailFromInputs = checkPaymentList();
+
+        if (!detailFromInputs) return;
+
+        paymentDetail.phone = selectedUserPhone;
+        paymentDetail.name = selectedUserName;
+
+        paymentDetail.paymentReason =
+          detailFromInputs.paymentReason[1].value.trim();
+
+        paymentDetail.paymentMonth =
+          detailFromInputs.paymentMonth[1].value.trim();
+
+        paymentDetail.paymentYear =
+          detailFromInputs.paymentYear[1].value.trim();
+
+        paymentDetail.paymentAmount =
+          detailFromInputs.paymentAmount[1].value.trim();
+
+        paymentDetail.payerDetail =
+          detailFromInputs.payerDetail[1].value.trim();
+
+        paymentDetail.paymentTin = detailFromInputs.paymentTin[1].value.trim();
+
+        paymentDetail.paymentDescription =
+          detailFromInputs.paymentDescription[1].value.trim();
+
+        const url = window.location.origin;
+        $.ajax({
+          type: 'POST',
+          url: url + '/addPayment',
+          data: paymentDetail,
+          success: function (data) {
+            displayToast(data.msg, data.states);
+            console.log(data);
+          },
+          statusCode: {
+            404: function () {
+              displayToast(
+                'Payment not added! make sure you are connected to internet!',
+                'warning'
+              );
+            },
+          },
+          timeout: 6000,
+        });
+      };
+
+      // displaying search result
+      const displayingPaymentSearchTmpList = function (data, res) {
+        console.log(data);
+        tempPaymentSearchList.innerHTML = '';
+
+        data.forEach((element) => {
+          const searchListHtml = `<div class="payment-item">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <span class="payment-id">${element.paymentId}</span
+                                        ><span class="payment-info">${element.payment}</span>
+                                      </div>`;
+          tempPaymentSearchList.insertAdjacentHTML(
+            'afterbegin',
+            searchListHtml
+          );
+        });
+        btnPaymentList = document.querySelectorAll('.payment-item');
+        for (const btn of btnPaymentList) {
+          btn.addEventListener('click', function () {
+            for (const node of this.childNodes) {
+              if (node.className === 'payment-id') {
+                console.log(node.textContent.trim());
+                // findPayment(node.textContent.trim());
+              }
+            }
+          });
+        }
+      };
+
+      const displayingUserSearchTmpList = function (data, res) {
+        tempUserSearchList.innerHTML = '';
+
+        data.forEach((element) => {
+          const searchListHtml = `<div class="payment-item">
+                                        <i class="fa-solid fa-magnifying-glass" ></i>
+                                        <span class="user-id" data-name='${element.name}'>${element.phone}</span
+                                        >
+                                        <span class="user-info">${element.info}</span>
+                                      </div>`;
+          tempUserSearchList.insertAdjacentHTML('afterbegin', searchListHtml);
+        });
+        btnUserList = document.querySelectorAll('.payment-item');
+        for (const btn of btnUserList) {
+          btn.addEventListener('click', function () {
+            for (const node of this.childNodes) {
+              if (node.className === 'user-id') {
+                selectedUserPhone = node.textContent.trim();
+                selectedUserName = node.dataset.name;
+                spanCurrentUsername.dataset.name = node.dataset.name;
+              }
+
+              if (node.className === 'user-info')
+                spanCurrentUsername.textContent = node.textContent.trim();
+            }
+          });
+        }
+      };
+
+      const hideTmpSearchAndOverlay = function () {
+        // tempPaymentSearchList.innerHTML = "";
+        // tempPaymentSearchList.classList.add("hidden");
+        tempUserSearchList.innerHTML = '';
+        tempUserSearchList.classList.add('hidden');
+        searchOverlay.classList.add('hidden');
+      };
+
+      // get payment list
+
+      const getPaymentList = function () {
+        const url = window.location.origin;
+        $.ajax({
+          type: 'GET',
+          url: url + '/getPaymentList',
+          data: '',
+          success: function (data) {
+            console.log(data);
+            if ((data.states = 'success')) displayPaymentList(data.results);
+          },
+          statusCode: {},
+          timeout: 6000,
+        });
+      };
+
+      window.addEventListener('load', function () {
+        getPaymentList();
+      });
+
+      // paymentSearchInEl.addEventListener("keyup", function () {
+      //   const url = window.location.origin;
+
+      //   console.log("h");
+      //   searchOverlay.classList.add("search-overlay");
+
+      //   tempPaymentSearchList.classList.remove("hidden");
+      //   searchOverlay.classList.remove("hidden");
+
+      //   if (paymentSearchInEl.value) {
+      //     $.ajax({
+      //       type: "GET",
+      //       url: url + "/payment-search?search=" + paymentSearchInEl.value,
+      //       success: function (data) {
+      //         displayingPaymentSearchTmpList(data, "search_result");
+      //       },
+      //     });
+      //   } else {
+      //     hideTmpSearchAndOverlay();
+      //   }
+      // });
+
+      userSearchInEl.addEventListener('keyup', function () {
+        const url = window.location.origin;
+        searchOverlay.classList.add('search-overlay');
+
+        tempUserSearchList.classList.remove('hidden');
+        searchOverlay.classList.remove('hidden');
+
+        if (userSearchInEl.value) {
+          $.ajax({
+            type: 'GET',
+            url: url + '/userSearch?searchValue=' + userSearchInEl.value,
+            success: function (data) {
+              displayingUserSearchTmpList(data, 'search_result');
+            },
+          });
+        } else {
+          hideTmpSearchAndOverlay();
+        }
+      });
+
+      searchOverlay.addEventListener('click', function () {
+        hideTmpSearchAndOverlay();
+      });
+
+      // Event Listeners
+
+      // paymentSearchContainer.addEventListener("click", function () {
+      //   hideTmpSearchAndOverlay();
+      // });
+
+      paymentFormContainer.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (element.getAttribute('id') === 'btn-pay') {
+          addPayment(selectedUserPhone);
+        }
+      });
+
+      paymentFormContainer.addEventListener('change', function (e) {
+        const element = e.target;
+
+        if (element.getAttribute('id') === 'payment-amount') {
+          paymentDetail = {};
+          if (!receiptType?.[1] || !element.value) {
+            displayToast(
+              'Add proper payment amount or reload the page',
+              'warning'
+            );
+          }
+
+          paymentDetail.grossAmount = element.value;
+          paymentDetail.taxAmount = (
+            element.value *
+            (receiptType?.[1] / 100)
+          ).toFixed(4);
+          paymentDetail.netAmount = (
+            element.value -
+            element.value * (receiptType?.[1] / 100)
+          ).toFixed(4);
+          // payment-amount
+          (element
+            .closest('#payment-form-container')
+            ?.querySelector('#tax-payment-amount')).textContent =
+            paymentDetail.taxAmount || '0.00';
+          (element
+            .closest('#payment-form-container')
+            ?.querySelector('#net-payment-amount')).textContent =
+            paymentDetail.netAmount || '0.00';
+          (element
+            .closest('#payment-form-container')
+            ?.querySelector('#total-payment-amount')).textContent =
+            paymentDetail.grossAmount || '0.00';
+        }
+      });
+
+      document.body.addEventListener('click', function (e) {
+        const element = e.target;
+        if (!element.classList.contains('payment-item'))
+          hideTmpSearchAndOverlay();
+      });
+
+      userSearchContainer.addEventListener('click', function () {
+        hideTmpSearchAndOverlay();
+      });
+
+      listContainer.addEventListener('click', function (e) {
+        const element = e.target;
+
+        if (element.contains('btn-print-payment')) {
+          const id = element.dataset.id;
+          const paymentId = element.dataset.paymentId;
+
+          const url = window.location.origin;
+          $.ajax({
+            type: 'POST',
+            url: url + '/paymentPrintData',
+            data: paymentDetail,
+            success: function (data) {
+              if (data.states !== 'success')
+                displayToast(data.msg, data.states);
+
+              console.log(data);
+            },
+            statusCode: {
+              404: function () {},
+            },
+            timeout: 6000,
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

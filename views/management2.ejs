@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tesla Taxi</title>
+  <link rel="stylesheet" href="public\assets\style.css">
+  <script src="public\assets\jquery.min.js"></script>
+  <script src="http://demos.codexworld.com/includes/js/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+
+</head>
+
+<body>
+
+  <div class="registration-form">
+    <div class="header">
+      <div class="loader"></div>
+      <h1>Tesla Taxi Management</h1>
+    </div>
+
+    <form id="management_form" method="post" action="manage_something">
+
+      <table id="management_table" class="table">
+
+        <tr class="label on_top">
+          <td colspan="6"> <span class="label titles">Manage Drivers</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="custom-select">
+              <label class="title_lable" for="driver_id">driver name</label>
+              <br>
+              <select name="email" id="email" required>
+                <% staff.forEach(function(staff){ %>
+                  <option value="<%=staff.email%>">
+                    <%=staff.first_name+" "+staff.last_name%> </option><% }); %>
+                <option value=" All">All drivers
+                  </option>
+              </select>
+            </div>
+          </td>
+          <td>
+            <div class="custom-select">
+              <label for="states">Driver states</label>
+              <br>
+              <select name="states" id="states" required>
+                <option value="enabled">Enable</option>
+                <option value="disabled">Disable</option>
+              </select>
+
+          <td>
+  </div><button type="button" id="enable_staff" class="btnManagement">Set</button> </td>
+
+
+  </tr>
+
+  <tr>
+    <td><button type="button" id="driver_info" class="btnManagement">Driver Info</button></td>
+    <td><button type="button" id="assign_driver" class="btnManagement">Assign Driver</button>
+    </td>
+    <td> <button type="button" id="assigned_tasks" class="btnManagement">Assigned tasks</button></td>
+  </tr>
+
+  <tr class="label on_top">
+    <td colspan="6"> <span class="label titles">Manage Clients</span></td>
+  </tr>
+
+  <tr>
+
+
+    <td>
+      <div class="custom-select">
+        <label for="start_point">Start Point</label>
+        <br>
+
+        <select name="start_point" id="start_point" required>
+          <option></option>
+          <% places.forEach(function(places){ %>
+            <option value="<%=places.place_name%>">
+              <%=places.place_name%>
+            </option>
+            <% }); %>
+        </select>
+      </div>
+    </td>
+    <td>
+      <div class="custom-select">
+        <label for="end_point">End Point</label>
+        <br>
+
+        <select name="end_point" id="end_point" required>
+          <option></option>
+          <% places.forEach(function(places){ %>
+            <option value="<%=places.place_name%>">
+              <%=places.place_name%>
+            </option>
+            <% }); %>
+        </select>
+      </div>
+    </td>
+  </tr>
+
+
+
+
+  <tr>
+
+    <td>
+      <div class="custom-select">
+        <label class="title_lable" for="service_group">Service Group</label>
+        <br>
+        <select name="service_group" id="service_group">
+          <option></option>
+        </select>
+
+      </div>
+    </td>
+
+    <td><button type="button" id="btn_load_group" class="btnManagement">Load matching groups</button></td>
+
+  </tr>
+
+  <tr>
+    <td>
+      <div class="table_title">
+        <span class="title">Left seats:</span>
+        <span class="title" id="left_seats"></span>
+      </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td><button type="button" id="btn_find_assigned_clients" class="btnManagement">Find assigned clients</button></td>
+    <td> <button type="button" id="btn_find_unassigned_clients" class="btnManagement">Find unassigned clients</button>
+    </td>
+  </tr>
+
+  <tr>
+
+    <td>
+      <div class="custom-select">
+        <label class="title_lable" for="client_name">Client name</label>
+        <br>
+        <select name="client_name" id="client_name" required>
+          <option></option>
+        </select>
+      </div>
+    </td>
+
+    <td><button type="button" id="btn_client_info" class="btnManagement">Client info</button></td>
+  </tr>
+
+  <tr>
+    <td> <button type="button" id="btn_allow_reorder" class="btnManagement">Allow reorder</button></td>
+  </tr>
+
+  <tr>
+    <td><button type="button" id="btn_assigned_clients" class="btnManagement">All assigned clients</button></td>
+    <td><button type="button" id="btn_unassigned_clients" class="btnManagement">All unassigned clients</button> </td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>
+      <button type="button" id="btn_add_to_service_group" class="btnManagement">Add to group</button>
+    </td>
+    <td><button type="button" id="btn_move_to_service_group" class="btnManagement">Move to group</button></td>
+
+  </tr>
+  <tr>
+    <td>
+      <button id="btn_report" type="button" class="btnManagement">Get report</button>
+    </td>
+
+  </tr>
+
+  </table>
+  <!-- <div class="ref">
+            <a class=".href" href="/student_registration">Register student</a>
+            <br>
+            <a class=".href" href="/login">Login</a>
+          </div> -->
+
+  </form>
+
+
+  <div class="staff_info_class">
+
+    <table id="staff_task_assigned" class="info_table">
+      <thead>
+        <tr>
+          <th colspan="13">Driver Tasks</th>
+        </tr>
+        <tr>
+          <th>Task id</th>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Start Point</th>
+          <th>End Point</th>
+          <th>Monthly Payment</th>
+          <th>Task Type</th>
+          <th>Available seats</th>
+          <th>Left seats</th>
+          <th>Service group</th>
+          <th>Plate number</th>
+          <th>Assigned by</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="staff_info_class">
+
+
+    <table id="drivers_info_table" class="info_table">
+      <thead>
+        <tr>
+          <th colspan="10">Driver Info</th>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Service Type</th>
+          <th>Type of car</th>
+          <th>Model of car</th>
+          <th>Available vehicle seat</th>
+          <th>Plate number</th>
+          <th>Reg Date</th>
+          <th>States</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="staff_info_class">
+
+
+    <table id="client_info_table" class="info_table">
+      <thead>
+        <tr>
+          <th colspan="9">Clients Info</th>
+        </tr>
+        <tr>
+
+          <th>Phone</th>
+          <th>Name</th>
+          <th>Service group</th>
+          <th>Start point</th>
+          <th>End point</th>
+          <th>Order date</th>
+          <th>Reg date</th>
+          <th>States</th>
+          <th>Payment states</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="management_mark_list">
+
+
+    <table id="manage_mark_list" class="mark_table">
+
+
+  </div>
+
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <span class="close">&times;</span> -->
+        <h2>Tesla Taxi Management</h2>
+      </div>
+      <div class="modal-body">
+
+        <div class="printStudentId">
+          <br>
+          <span id="successMessage" class="label success"></span>
+          <br>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <script>
+
+
+    const modal = document.getElementById("myModal");
+
+    const span = document.getElementsByClassName("close")[0];
+    const successMessage = document.getElementById("successMessage");
+
+    const loader;
+
+
+    const service_group_array = [];
+    const service_group_index = -1;
+
+    const clients_array = [];
+
+    const clients_index = -1;
+
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+
+    const loaded_service_types = "";
+
+
+    $(document).ready(function () {
+
+
+      loader = document.getElementsByClassName("loader")[0];
+
+
+      $('#client_name').on('change', function () {
+
+
+
+
+      });
+
+
+      $('#btn_allow_reorder').on('click', function () {
+
+        if ($('#client_name').val()) {
+
+          if ($('#client_name').val() == "All") {
+            alert('please select only one client');
+            return;
+          }
+
+
+          loader.style.display = "block";
+
+          const data = {};
+          data.phonNum = $('#client_name').val();
+          const url = window.location.origin;
+          console.log(data)
+
+          $.ajax({
+            type: "POST",
+            url: url + "/allow_reorder",
+            data: data,
+            success: function (data) {
+              loader.style.display = "none";
+
+              if (data.states == "success") {
+
+                $("#successMessage").attr('class', 'label success');
+                $("#successMessage").text(data.states);
+                modal.style.display = "block";
+
+              }
+              else
+                alert(data.msg);
+
+            }
+
+          });
+
+
+
+        } else alert('client not selected!')
+
+
+      });
+
+      $('#btn_move_to_service_group').on('click', function () {
+
+        if ($('#service_group').val()) {
+          if ($('#client_name').val()) {
+
+            loader.style.display = "block";
+
+            const data = {};
+            data.service_group = $('#service_group option:selected').text().trim();
+            data.phonNum = $('#client_name').val();
+
+            const url = window.location.origin;
+
+            $.ajax({
+              type: "POST",
+              url: url + "/move_client_to_service",
+              data: data,
+              success: function (data) {
+                loader.style.display = "none";
+
+                if (data.states == "success") {
+
+                  $('#left_seats').text(data.data);
+
+                  $("#successMessage").attr('class', 'label success');
+                  $("#successMessage").text(data.states);
+                  modal.style.display = "block";
+
+                }
+                else
+                  alert(data.msg);
+
+              }
+
+            });
+
+          } else alert('Client not selected')
+        } else alert('Service group not selected')
+
+      });
+
+      $('#btn_add_to_service_group').on('click', function () {
+
+        if ($('#service_group').val()) {
+          if ($('#client_name').val()) {
+
+            loader.style.display = "block";
+
+            const data = {};
+            data.service_group = $('#service_group option:selected').text().trim();
+            data.phonNum = $('#client_name').val();
+
+            const url = window.location.origin;
+
+            $.ajax({
+              type: "POST",
+              url: url + "/add_client_to_service",
+              data: data,
+              success: function (data) {
+                loader.style.display = "none";
+
+                if (data.states == "success") {
+
+                  $('#left_seats').text(data.data);
+
+                  $("#successMessage").attr('class', 'label success');
+                  $("#successMessage").text(data.states);
+                  modal.style.display = "block";
+
+                }
+                else
+                  alert(data.msg);
+
+              }
+
+            });
+
+          } else alert('Client not selected')
+        } else alert('Service group not selected')
+
+
+      });
+
+      $('#btn_assigned_clients').on('click', function () {
+
+        get_all_clients_info("assigned", 0, 30);
+
+      });
+
+      $('#btn_unassigned_clients').on('click', function () {
+
+        get_all_clients_info("unassigned", 0, 30);
+
+      });
+
+      $('#btn_client_info').on('click', function () {
+
+        console.log(loaded_service_types)
+
+        loader.style.display = "block";
+
+
+        if ($('#start_point').val()) {
+          if ($('#end_point').val()) {
+            if ($('#start_point ').val() == $('#end_point ').val()) {
+              alert("Start point and end point cannot be the same")
+              return;
+            }
+            if ($('#client_name').val()) {
+              const data = {};
+              data.start_point = $('#start_point ').val().trim();
+              data.end_point = $('#end_point ').val().trim();
+              data.phonNum = $('#client_name').val().trim();
+              data.service_type = loaded_service_types;
+
+              const url = window.location.origin;
+
+
+              $.ajax({
+                type: "POST",
+                url: url + "/clients_info",
+                data: data,
+                success: function (data) {
+                  loader.style.display = "none";
+                  client_info(data);
+                }
+              });
+            } else alert('Client not selected');
+          } else alert('End point not selected');
+        } else alert('Start point not selected');
+      });
+
+      $('#btn_find_assigned_clients').on('click', function () {
+
+        if ($('#start_point').val()) {
+          if ($('#end_point').val()) {
+            if ($('#start_point ').val() == $('#end_point ').val()) {
+              alert("Start point and end point cannot be the same")
+              return;
+            }
+            const data = {};
+            data.start_point = $('#start_point ').val();
+            data.end_point = $('#end_point ').val();
+            data.type = "assigned"
+            // data.service_group = $('#service_group_name').val().trim();
+
+            const url = window.location.origin;
+
+
+            $.ajax({
+              type: "POST",
+              url: url + "/load_clients",
+              data: data,
+              success: function (data) {
+                load_clients(data, "assigned");
+              }
+            });
+
+          } else alert('End point not selected');
+        } else alert('Start point not selected');
+
+
+      });
+
+      $('#btn_find_unassigned_clients').on('click', function () {
+
+        if ($('#start_point').val()) {
+          if ($('#end_point').val()) {
+            if ($('#start_point ').val() == $('#end_point ').val()) {
+              alert("Start point and end point cannot be the same")
+              return;
+            }
+            const data = {};
+            data.start_point = $('#start_point ').val();
+            data.end_point = $('#end_point ').val();
+            data.type = "unassigned"
+            // data.service_group = $('#service_group_name').val().trim();
+
+            const url = window.location.origin;
+
+
+            $.ajax({
+              type: "POST",
+              url: url + "/load_clients",
+              data: data,
+              success: function (data) {
+                load_clients(data, "unassigned");
+              }
+            });
+
+          } else alert('End point not selected');
+        } else alert('Start point not selected');
+
+
+      });
+
+      $('#start_point').on('change', function () {
+
+        const client_name = document.getElementById('client_name');
+        client_name.length = 0;
+
+        const service_group = document.getElementById('service_group');
+        service_group.length = 0;
+
+      });
+
+      $('#end_point').on('change', function () {
+
+        const client_name = document.getElementById('client_name');
+        client_name.length = 0;
+
+        const service_group = document.getElementById('service_group');
+        service_group.length = 0;
+
+      });
+
+      $('#service_group').on('change', function (event) {
+
+
+        if ($('#service_group').val()) {
+
+          loader.style.display = "block";
+
+          const data = {};
+          data.service_group = $('#service_group option:selected').text().trim();
+
+          const url = window.location.origin;
+
+          $.ajax({
+            type: "POST",
+            url: url + "/load_left_seats",
+            data: data,
+            success: function (data) {
+              loader.style.display = "none";
+
+              if (data.states == "success") {
+
+                $('#left_seats').text(data.data[0].left_vahicle_seat);
+
+              }
+              else
+                alert(data.msg);
+
+            }
+          });
+
+        }
+      });
+
+      $('#btn_load_group').on('click', function () {
+
+        loader.style.display = "block";
+
+        if ($('#start_point').val()) {
+          if ($('#end_point').val()) {
+            if ($('#start_point').val() == $('#end_point').val()) {
+              alert("Start point and end point cannot be the same")
+              return;
+            }
+            const data = {};
+            data.start_point = $('#start_point').val();
+            data.end_point = $('#end_point').val();
+
+            const url = window.location.origin;
+
+            $.ajax({
+              type: "POST",
+              url: url + "/service_groups",
+              data: data,
+              success: function (data) {
+                loader.style.display = "none";
+                service_groups(data);
+              }
+            });
+
+          } else alert('End point not selected');
+        } else alert('Start point not selected');
+
+
+      });
+
+      $('#enable_staff').on('click', function () {
+        loader.style.display = "block";
+
+        if ($('#email').val()) {
+          const info_tables = document.getElementById('drivers_info_table');
+          info_tables.style.display = "none";
+          const data = {};
+          data.email = $('#email').val();
+          data.states = $('#states').val();
+          const url = window.location.origin;
+
+          $.ajax({
+            type: "POST",
+            url: url + "/enable_driver",
+            data: data,
+            success: function (data) {
+              loader.style.display = "none";
+              allowData(data);
+            }
+          });
+
+        } else alert('driver not selected');
+
+      });
+
+      $('#driver_info').on('click', function () {
+        loader.style.display = "block";
+
+        if ($('#email').val()) {
+
+
+          const data = {}
+          data.email = $('#email').val();
+          const url = window.location.origin;
+
+          $.ajax({
+            type: "POST",
+            url: url + "/driver_infos",
+            data: data,
+            success: function (data) {
+              loader.style.display = "none";
+              DriverInfData(data);
+            }
+          });
+
+        }
+        else alert('driver not selected');
+
+      });
+
+      $('#assign_driver').on("click", function () {
+        const url = window.location.origin;
+        window.open(url + "/task_assigning", '_blank');
+      });
+
+      $('#assigned_tasks').on('click', function () {
+
+        loader.style.display = "block";
+
+        const data = {}
+        const url = window.location.origin;
+
+        $.ajax({
+          type: "POST",
+          url: url + "/assigned_tasks",
+          data: data,
+          success: function (data) {
+            loader.style.display = "none";
+            assignedTasks(data);
+          }
+        });
+      });
+
+    });
+
+    function get_all_clients_info(service_group, start, limit) {
+
+      loader.style.display = "block";
+
+      console.log(start)
+
+      const data = {};
+      data.service_group = service_group;
+      data.start = start;
+      data.limit = limit;
+
+      const url = window.location.origin;
+
+      $.ajax({
+        type: "POST",
+        url: url + "/all_clients_info",
+        data: data,
+        success: function (data) {
+          loader.style.display = "none";
+          all_client_info(data, service_group, start, limit);
+        }
+      });
+    }
+
+    function all_client_info(data2, service_group, start2, limit2) {
+
+      if (data2.states == 'success') {
+
+        const data = data2.data;
+        const service_group2 = data2.service_group;
+
+
+        const infoTableBody = document.querySelector("#client_info_table > tbody");
+        const info_tables = document.getElementById('client_info_table');
+        info_tables.style.display = "block";
+        while (infoTableBody.firstChild) {
+          infoTableBody.removeChild(infoTableBody.firstChild);
+        }
+        data.forEach((row) => {
+
+          const tr = document.createElement("tr");
+
+          row.forEach((cell) => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
+            if (cell == "blocked")
+              tr.style.backgroundColor = "#FF7F7F"
+          });
+          infoTableBody.appendChild(tr);
+        });
+
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+
+        const td2 = document.createElement("td");
+        const tdButton2 = document.createElement("button");
+        tdButton2.id = "btnCloseStaffInfoTb"
+        tdButton2.type = "button";
+        tdButton2.className = "staff_info_close";
+        tdButton2.textContent = "Prev"
+        tdButton2.onclick = function () {
+
+          if (start2 >= limit2) {
+
+            const start_point = parseInt(start2) - parseInt(limit2);
+
+            get_all_clients_info(service_group2, start_point, limit2);
+
+          }
+        }
+
+        const td3 = document.createElement("td");
+        const tdButton3 = document.createElement("button");
+        tdButton3.id = "btnCloseStaffInfoTb"
+        tdButton3.type = "button";
+        tdButton3.className = "staff_info_close";
+        tdButton3.textContent = "Next"
+        tdButton3.onclick = function () {
+
+          const start_point = parseInt(start2) + parseInt(limit2);
+
+
+          get_all_clients_info(service_group2, start_point, limit2);
+
+
+        }
+
+        const tdButton = document.createElement("button");
+        tdButton.id = "btnCloseStaffInfoTb"
+        tdButton.type = "button";
+        tdButton.className = "staff_info_close";
+        tdButton.textContent = "Close"
+        tdButton.onclick = function () {
+          while (infoTableBody.firstChild) {
+            infoTableBody.removeChild(infoTableBody.firstChild);
+          }
+          info_tables.style.display = "none";
+        }
+
+        td.appendChild(tdButton);
+        td2.appendChild(tdButton2);
+        td3.appendChild(tdButton3);
+
+        tr.appendChild(td);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+
+        infoTableBody.appendChild(tr);
+
+      }
+      else if (data2.states == 'no data') {
+        alert('no client data');
+      }
+
+
+    }
+
+    function load_clients(data, loaded_service_type) {
+
+
+      const client_name = document.getElementById('client_name');
+      client_name.length = 0;
+
+      if (data.states == "success") {
+
+        loaded_service_types = loaded_service_type;
+
+        clients_array = data.data;
+
+        const client_name_opt = document.createElement('option');
+
+        client_name_opt.value = "All";
+        client_name_opt.innerHTML = "All";
+        client_name.appendChild(client_name_opt);
+
+        data.data.forEach(function (element, index) {
+
+          const client_name_opt = document.createElement('option');
+
+          client_name_opt.value = element.phonNum;
+          client_name_opt.innerHTML = element.name + " " + element.fname;
+          client_name.appendChild(client_name_opt);
+
+        });
+      }
+      else if (data.states == "error")
+        alert(data.msg);
+
+    }
+
+    function service_groups(data) {
+
+      const service_group_list = document.getElementById('service_group');
+      service_group_list.length = 0;
+
+      if (data.states == "success") {
+
+        service_group_array = data.data;
+
+        const service_group_opt = document.createElement('option');
+
+        service_group_opt.value = "";
+        service_group_opt.innerHTML = "";
+        service_group_list.appendChild(service_group_opt);
+
+        data.data.forEach(function (element, index) {
+
+          const service_group_opt = document.createElement('option');
+
+          service_group_opt.value = element.id;
+          service_group_opt.innerHTML = element.service_group;
+          service_group_list.appendChild(service_group_opt);
+
+        });
+      }
+      else if (data.states == "error")
+        alert(data.msg);
+    }
+
+    function allowData(data) {
+
+      if (data.states == "success") {
+
+        $("#successMessage").attr('class', 'label success');
+        $("#successMessage").text(data.msg);
+        modal.style.display = "block";
+      }
+      else if (data.states == "error") {
+        $("#successMessage").attr('class', 'label danger');
+        $("#successMessage").text(data.msg);
+        modal.style.display = "block";
+      }
+      else if (data.states == "expired") {
+        $("#successMessage").attr('class', 'label danger');
+        $("#successMessage").text(data.msg);
+        modal.style.display = "block";
+        idPrint.style.display = "none";
+        formPrint.style.display = "none";
+      }
+    }
+
+    function DriverInfData(data) {
+
+      const infoTableBody = document.querySelector("#drivers_info_table > tbody");
+      const info_tables = document.getElementById('drivers_info_table');
+      info_tables.style.display = "block";
+      while (infoTableBody.firstChild) {
+        infoTableBody.removeChild(infoTableBody.firstChild);
+      }
+
+      if (data.states == "success") {
+
+        data.data.forEach((row) => {
+
+          const tr = document.createElement("tr");
+
+          row.forEach((cell) => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
+            if (cell == "disabled")
+              tr.style.backgroundColor = "#FF7F7F"
+          });
+          infoTableBody.appendChild(tr);
+        });
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        const tdButton = document.createElement("button");
+        tdButton.id = "btnCloseStaffInfoTb"
+        tdButton.type = "button";
+        tdButton.className = "staff_info_close";
+        tdButton.textContent = "Close"
+        tdButton.onclick = function () {
+          while (infoTableBody.firstChild) {
+            infoTableBody.removeChild(infoTableBody.firstChild);
+          }
+          info_tables.style.display = "none";
+        }
+        td.appendChild(tdButton);
+        tr.appendChild(td);
+        infoTableBody.appendChild(tr);
+      }
+      else
+        alert("no driver data to show");
+    }
+
+    function assignedTasks(data) {
+
+      const infoTableBody = document.querySelector("#staff_task_assigned > tbody");
+      const info_tables = document.getElementById('staff_task_assigned');
+      info_tables.style.display = "block";
+
+      if (data.states == "success") {
+
+        while (infoTableBody.firstChild) {
+
+          infoTableBody.removeChild(infoTableBody.firstChild);
+        }
+        data.data.forEach((row) => {
+
+          const tr = document.createElement("tr");
+
+          row.forEach((cell) => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+
+
+          const trButton = document.createElement("button");
+          trButton.id = "btnRemoveTask";
+          trButton.type = "button";
+          trButton.className = "staff_info_close";
+          trButton.textContent = "Remove";
+          trButton.onclick = function () {
+
+            const r = confirm("Are you sure?")
+            if (r == true) {
+              const url = window.location.origin;
+              const data = {}
+              data.id = row[0];
+
+              $.ajax({
+                type: "POST",
+                url: url + "/remove_task",
+                data: data,
+                success: function (data) {
+                  assignedTasks(data);
+                }
+              });
+            }
+
+          }
+
+          tr.appendChild(trButton);
+          infoTableBody.appendChild(tr);
+
+        });
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+
+        const tdButton = document.createElement("button");
+        tdButton.id = "btnCloseStaffInfoTb"
+        tdButton.type = "button";
+        tdButton.className = "staff_info_close";
+        tdButton.textContent = "Close";
+        tdButton.onclick = function () {
+          while (infoTableBody.firstChild) {
+            infoTableBody.removeChild(infoTableBody.firstChild);
+          }
+          info_tables.style.display = "none";
+        }
+
+        td.appendChild(tdButton);
+        tr.appendChild(td);
+        infoTableBody.appendChild(tr);
+
+      }
+      else if (data.states = "warning") {
+        while (infoTableBody.firstChild) {
+          infoTableBody.removeChild(infoTableBody.firstChild);
+        }
+        info_tables.style.display = "none";
+        $("#successMessage").attr('class', 'label danger');
+        $("#successMessage").text(data.msg);
+        modal.style.display = "block";
+      }
+    }
+
+    function client_info(data) {
+      const infoTableBody = document.querySelector("#client_info_table > tbody");
+      const info_tables = document.getElementById('client_info_table');
+      info_tables.style.display = "block";
+      while (infoTableBody.firstChild) {
+        infoTableBody.removeChild(infoTableBody.firstChild);
+      }
+      data.forEach((row) => {
+
+        const tr = document.createElement("tr");
+
+        row.forEach((cell) => {
+          const td = document.createElement("td");
+          td.textContent = cell;
+          tr.appendChild(td);
+          if (cell == "blocked")
+            tr.style.backgroundColor = "#FF7F7F"
+        });
+        infoTableBody.appendChild(tr);
+      });
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      const tdButton = document.createElement("button");
+      tdButton.id = "btnCloseStaffInfoTb"
+      tdButton.type = "button";
+      tdButton.className = "staff_info_close";
+      tdButton.textContent = "Close"
+      tdButton.onclick = function () {
+        while (infoTableBody.firstChild) {
+          infoTableBody.removeChild(infoTableBody.firstChild);
+        }
+        info_tables.style.display = "none";
+      }
+
+      td.appendChild(tdButton);
+      tr.appendChild(td);
+      infoTableBody.appendChild(tr);
+
+    }
+
+
+  </script>
+  <footer>
+    <div class="table_title">
+      <span class="title">Email: <%=(typeof email!='undefined' )? email:''%></span>
+      <span class="title">Date: <%=(typeof date!='undefined' )? date:''%></span>
+      <a href="/">Login</a>
+      <br>
+      <br>
+      <a href="/driver_register"> Driver Registration</a>
+      <br>
+      <br>
+      <a href="staff_register"> Staff Registration</a>
+    </div>
+  </footer>
+</body>
+
+</html>
