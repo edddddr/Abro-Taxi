@@ -1,6 +1,6 @@
 /* Text colors */
 .text-primary {
-  color: #28a745;
+  color: #dfbe5b;
 }
 
 .text-secondary {
@@ -22,7 +22,7 @@
   display: inline-block;
   padding: 10px 30px;
   color: #fff;
-  background-color: #28a745;
+  background-color: #dfbe5b;
   border: none;
   border-radius: 5px;
 }
@@ -37,7 +37,7 @@
 }
 .btn-primary,
 .bg-primary {
-  background: #28a745;
+  background: #dfbe5b;
   color: #fff;
 }
 
@@ -60,7 +60,7 @@
 }
 .btn-warning,
 .bg-warning {
-  background: #f3d966;
+  background: #dfbe5b;
   color: #333;
 }
 
@@ -178,7 +178,7 @@
 }
 
 .icon-taxi {
-  color: #28a745;
+  color: #dfbe5b;
 }
 
 /* container */
@@ -189,3 +189,12 @@
   margin-top: 100px;
   padding: 0 10px;
 }
+
+@media (max-width: 800px) {
+    .flex-items{
+      flex-direction: column;
+    }
+    .flex-columns .row{
+      flex-direction: column;
+    }
+  }
