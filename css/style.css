@@ -73,7 +73,7 @@ img {
 
 .navbar a:hover {
   border-radius: 20px;
-  background: #28a745;
+  background: #dfbe5b;
 }
 
 .navbar ul {
@@ -87,7 +87,7 @@ img {
 
 /* Header */
 .hero {
-  background: url('../images/taxi_background.avif') no-repeat center
+  background: url('../images/taxi_background.jpg') no-repeat center
     center/cover;
   height: 100vh;
   position: relative;
@@ -100,7 +100,7 @@ img {
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: 100%;
+  height: 70%;
   padding: 0 20px;
 }
 
@@ -125,7 +125,7 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .hero * {
@@ -148,7 +148,7 @@ img {
 }
 
 .icons main-search-icon {
-  background-color: #28a745;
+  background-color: #dfbe5b;
   color: #fff;
   padding: 1rem;
   border-radius: 50%;
@@ -164,8 +164,10 @@ img {
 }
 
 /* Callback form */
+
 #form-container {
-  height: 80vh;
+  height: 100vh;
+
 }
 #form-container form {
   overflow-x: hidden;
@@ -205,7 +207,7 @@ img {
   width: 100%;
   margin-bottom: 10px;
   padding: 10px;
-  background-color: #28a745;
+  background-color: #dfbe5b;
   color: #f4f4f4;
   font-size: 18px;
   border-radius: 5px;
@@ -219,7 +221,7 @@ img {
 }
 
 .callback-form input:focus {
-  outline-color: #28a745;
+  outline-color: #dfbe5b;
 }
 
 .callback-form .btn {
@@ -268,7 +270,7 @@ select {
 
 /* Form inputs */
 .form-container {
-  margin: 30px auto 10px;
+  margin: 100px auto 10px;
   padding: 20px;
   max-width: 600px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -381,7 +383,7 @@ select {
 }
 
 .footer a:hover {
-  color: #28a745;
+  color: #dfbe5b;
 }
 
 .footer .social > * {
@@ -425,7 +427,7 @@ select {
 }
 
 .sidebar-btn:hover {
-  background: #28a745;
+  background: #dfbe5b;
   border-radius: 3px;
 }
 
@@ -508,7 +510,7 @@ select {
   border-radius: 10px;
   font-size: 0.8rem;
   color: #f4f4f4;
-  background-color: #28a745;
+  background-color: #dfbe5b;
 }
 tr td:first-child {
   padding: 0 1rem;
@@ -559,7 +561,7 @@ tr .btn {
 }
 .search-container .main-search-icon {
   border-radius: 50%;
-  background-image: linear-gradient(to top left, #39b385, #9be15d);
+  background-image: linear-gradient(to top left, #dfbe5b, #d4c38f);
   padding: 10px;
   color: #fff;
 }
@@ -741,7 +743,7 @@ tr .btn {
 }
 
 .items button:hover {
-  background-color: #f4f499;
+  background-color: #dfbe5b;
 }
 
 .items.user-items .btn-move-passenger-to-group {
@@ -916,7 +918,7 @@ h2 {
 }
 .search-container .main-search-icon {
   border-radius: 50%;
-  background-image: linear-gradient(to top left, #39b385, #9be15d);
+  background-image: linear-gradient(to top left, #dfbe5b, #ccbc8b);
   padding: 10px;
   color: #fff;
 }
@@ -1241,7 +1243,7 @@ h2 {
   }
 
   .phone-primary {
-    background-color: #28a745;
+    background-color: #FFc005;
 
     border-radius: 0%;
   }
